@@ -1,0 +1,21 @@
+foo:
+  - shares: -75.088
+    date: 11/27/2015
+  - shares: 75.088
+    date: 11/26/2015
+
+services:
+  encryption:
+    key: SECRET_KEY
+  images:
+    processor:
+      type: 'local'
+  albums:
+    store:
+      type: 'storage'
+  blobs:
+    store:
+      type: 'storage'
+      container: uploads
+      previews_container: previews
+

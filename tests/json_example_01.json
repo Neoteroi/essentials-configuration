@@ -1,0 +1,35 @@
+{
+  "ApplicationInsights": {
+    "InstrumentationKey": "742dc2e1-3f6f-447a-b710-6bf61d6e8a3c"
+  },
+  "Authentication": {
+    "B2C": [
+      {
+        "IssuerName": "example",
+        "Audiences": [
+          "da715428-0d7b-4522-b465-04cca0740d43",
+          "22489371-90f9-4b3e-8dbd-4ae00863e1c4"
+        ],
+        "SignInPolicy": "B2C_1_Example",
+        "Tenant": "example.onmicrosoft.com",
+        "TenantId": "335091f0-dd2e-4b03-a396-b3f296a969fd"
+      },
+      {
+        "IssuerName": "example2",
+        "Audiences": [
+          "6f84c536-7a4e-4b06-9720-c330f8c31864",
+          "f0f1f0d5-9d59-49d0-8a79-f67faf200dae"
+        ],
+        "SignInPolicy": "B2C_1_Example",
+        "Tenant": "example2.onmicrosoft.com",
+        "TenantId": "feac8bfa-f9b1-4792-a713-ec2eac7fec25"
+      }
+    ]
+  },
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  }
+}

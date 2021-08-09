@@ -1,0 +1,10 @@
+host: localhost
+port: 44555
+
+jwt_issuer: https://example.org
+
+jwt_audience: https://example.org
+
+jwt_algorithm: HS256
+
+jwt_algorithms: ['HS256']
