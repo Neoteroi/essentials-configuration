@@ -1,12 +1,13 @@
-import json
 import os
 from typing import Any, Dict
 
-from . import ConfigurationSource
-from .errors import MissingConfigurationFileError
+import yaml
+
+from ..common import ConfigurationSource
+from ..common.errors import MissingConfigurationFileError
 
 
-class JSONFile(ConfigurationSource):
+class YAMLFile(ConfigurationSource):
     def __init__(
         self, file_path: str, optional: bool = False, safe_load: bool = True
     ) -> None:
@@ -21,5 +22,10 @@ class JSONFile(ConfigurationSource):
                 return {}
             raise MissingConfigurationFileError(self.file_path)
 
-        with open(self.file_path, "rt", encoding="utf-8") as source_file:
-            return json.load(source_file)
+        with open(self.file_path, "rt", encoding="utf-8") as f:
+            if self.safe_load:
+                data = yaml.safe_load(f)
+            else:
+                data = yaml.full_load(f)
+
+            return data

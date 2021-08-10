@@ -1,7 +1,7 @@
 import os
 from typing import Any, Dict, Optional
 
-from . import ConfigurationSource
+from ..common import ConfigurationSource
 
 
 class EnvironmentalVariables(ConfigurationSource):

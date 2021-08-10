@@ -31,7 +31,13 @@ setup(
     author_email="roberto.prevato@gmail.com",
     keywords="configuration root core yaml ini json environment",
     license="MIT",
-    packages=["configuration"],
+    packages=[
+        "configuration.common",
+        "configuration.env",
+        "configuration.ini",
+        "configuration.json",
+        "configuration.yaml",
+    ],
     install_requires=[],
     extras_require={
         "yaml": [

@@ -43,7 +43,7 @@ pip install essentials-configuration[yaml]
 ## Extensions
 
 * Azure Key Vault secrets configuration source:
-  [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration)
+  [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)
 
 
 # Examples
@@ -56,7 +56,7 @@ Settings are applied in order, so environmental variables with matching name
 override values from the `json` file.
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 from configuration.json import JSONFile
 from configuration.env import EnvironmentalVariables
 
@@ -99,7 +99,7 @@ environmental variables with matching name override values from the `yaml` file
 
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 from configuration.env import EnvironmentalVariables
 from configuration.yaml import YAMLFile
 
@@ -119,7 +119,7 @@ present, it is read to override values configured in `settings.yaml` file.
 ```python
 import os
 
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 from configuration.env import EnvironmentalVariables
 from configuration.yaml import YAMLFile
 
@@ -139,7 +139,7 @@ config = builder.build()
 ### Filtering environmental variables by prefix
 
 ```python
-from configuration import Configuration
+from configuration.common import Configuration
 
 config = Configuration()
 
@@ -155,7 +155,7 @@ INI files are parsed using the built-in `configparser` module, therefore
 support `[DEFAULT]` section; all values are kept as strings.
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 from configuration.ini import INIFile
 
 builder = ConfigurationBuilder()
@@ -168,7 +168,7 @@ config = builder.build()
 ### Dictionaries
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 
 builder = ConfigurationBuilder()
 
@@ -188,7 +188,7 @@ assert config.example[1].id == 2
 ### Keys and values
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 
 builder = ConfigurationBuilder()
 
@@ -211,7 +211,7 @@ dictionary keys using the following notation for sub properties:
 * keys separated by "__", such as `a__d__e`
 
 ```python
-from configuration import ConfigurationBuilder, MapSource
+from configuration.common import ConfigurationBuilder, MapSource
 
 
 builder = ConfigurationBuilder(

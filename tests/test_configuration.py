@@ -4,14 +4,14 @@ from typing import Any, Dict
 import pkg_resources
 import pytest
 
-from configuration import (
+from configuration.common import (
     Configuration,
     ConfigurationBuilder,
     ConfigurationSource,
     MapSource,
 )
+from configuration.common.errors import ConfigurationOverrideError
 from configuration.env import EnvironmentalVariables
-from configuration.errors import ConfigurationOverrideError
 from configuration.ini import INIFile
 from configuration.json import JSONFile
 from configuration.yaml import YAMLFile
