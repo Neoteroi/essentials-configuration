@@ -138,7 +138,8 @@ class Configuration:
         raise MissingConfigurationError(name)
 
     def __repr__(self) -> str:
-        return f"<Configuration {repr(self._data)}>"
+        hidden_values = {key: "..." for key in self._data.keys()}
+        return f"<Configuration {repr(hidden_values)}>"
 
     @property
     def values(self) -> Dict[str, Any]:
@@ -149,7 +150,7 @@ class Configuration:
 
 
 class ConfigurationBuilder:
-    def __init__(self, sources: Optional[List[ConfigurationSource]] = None) -> None:
+    def __init__(self, *sources: ConfigurationSource) -> None:
         """
         Creates a new instance of ConfigurationBuilder, that can obtain a Configuration
         object from different sources. Sources are applied in the given order and can

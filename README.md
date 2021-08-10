@@ -25,6 +25,8 @@ JSON structure explorer using attribute notation, in his book [Fluent Python](ht
 * environmental variables
 * dictionaries
 * keys and values
+* [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration)
+* custom sources, implementing the `ConfigurationSource` interface
 
 ## Installation
 
@@ -32,11 +34,17 @@ JSON structure explorer using attribute notation, in his book [Fluent Python](ht
 pip install essentials-configuration
 ```
 
-Alternatively, to install it with support for `YAML` configuration files:
+To install with support for `YAML` configuration files:
 
 ```
 pip install essentials-configuration[yaml]
 ```
+
+## Extensions
+
+* Azure Key Vault secrets configuration source:
+  [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration)
+
 
 # Examples
 
@@ -52,10 +60,10 @@ from configuration import ConfigurationBuilder
 from configuration.json import JSONFile
 from configuration.env import EnvironmentalVariables
 
-builder = ConfigurationBuilder()
-
-builder.add_source(JSONFile("settings.json"))
-builder.add_source(EnvironmentalVariables(prefix="APP_"))
+builder = ConfigurationBuilder(
+    JSONFile("settings.json"),
+    EnvironmentalVariables(prefix="APP_")
+)
 
 config = builder.build()
 ```
@@ -76,7 +84,7 @@ And the environment has a variable named `APP_foo=AAA`:
 
 ```python
 >>> config
-<Configuration {'logging': {'level': 'INFO'}, 'example': 'Hello World', 'foo': 'AAA'}>
+<Configuration {'logging': '...', 'example': '...', 'foo': '...'}>
 >>> config.foo
 'AAA'
 >>> config.logging.level
@@ -207,20 +215,18 @@ from configuration import ConfigurationBuilder, MapSource
 
 
 builder = ConfigurationBuilder(
-    [
-        MapSource(
-            {
-                "a": {
-                    "b": 1,
-                    "c": 2,
-                    "d": {
-                        "e": 3,
-                        "f": 4,
-                    },
-                }
+    MapSource(
+        {
+            "a": {
+                "b": 1,
+                "c": 2,
+                "d": {
+                    "e": 3,
+                    "f": 4,
+                },
             }
-        )
-    ]
+        }
+    )
 )
 
 config = builder.build()
@@ -243,20 +249,18 @@ assert config.a.d.f == 4
 import os
 
 builder = ConfigurationBuilder(
-    [
-        MapSource(
-            {
-                "a": {
-                    "b": 1,
-                    "c": 2,
-                    "d": {
-                        "e": 3,
-                        "f": 4,
-                    },
-                }
+    MapSource(
+        {
+            "a": {
+                "b": 1,
+                "c": 2,
+                "d": {
+                    "e": 3,
+                    "f": 4,
+                },
             }
-        )
-    ]
+        }
+    )
 )
 
 config = builder.build()
@@ -285,17 +289,15 @@ assert config.a.d.e == "5"
 
 ```python
 builder = ConfigurationBuilder(
-    [
-        MapSource(
-            {
-                "b2c": [
-                    {"tenant": "1"},
-                    {"tenant": "2"},
-                    {"tenant": "3"},
-                ]
-            }
-        )
-    ]
+    MapSource(
+        {
+            "b2c": [
+                {"tenant": "1"},
+                {"tenant": "2"},
+                {"tenant": "3"},
+            ]
+        }
+    )
 )
 
 builder.add_value("b2c:1:tenant", "4")

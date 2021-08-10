@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="essentials-configuration",
-    version="0.0.1",
+    version="0.0.2",
     description=(
         "Implementation of key-value pair based "
         "configuration for Python applications."
