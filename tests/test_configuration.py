@@ -218,10 +218,21 @@ def test_apply_key_value_raises_for_invalid_overrides(source, key, value):
 
 
 def test_raises_attribute_error():
-    configuration = Configuration()
+    configuration = Configuration({"foo": "foo"})
+
+    assert configuration.foo == "foo"
 
     with pytest.raises(AttributeError):
         configuration.lorem_ipsum
+
+
+def test_raises_key_error():
+    configuration = Configuration({"foo": "foo"})
+
+    assert configuration["foo"] == "foo"
+
+    with pytest.raises(KeyError):
+        configuration["lorem_ipsum"]
 
 
 def test_raises_attribute_error_for_sub_property():
