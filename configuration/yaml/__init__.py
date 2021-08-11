@@ -3,8 +3,8 @@ from typing import Any, Dict
 
 import yaml
 
-from . import ConfigurationSource
-from .errors import MissingConfigurationFileError
+from ..common import ConfigurationSource
+from ..errors import MissingConfigurationFileError
 
 
 class YAMLFile(ConfigurationSource):

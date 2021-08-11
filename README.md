@@ -2,7 +2,7 @@
 [![pypi](https://img.shields.io/pypi/v/essentials-configuration.svg)](https://pypi.python.org/pypi/essentials-configuration)
 [![versions](https://img.shields.io/pypi/pyversions/essentials-configuration.svg)](https://github.com/Neoteroi/essentials-configuration)
 [![codecov](https://codecov.io/gh/Neoteroi/essentials-configuration/branch/main/graph/badge.svg?token=VzAnusWIZt)](https://codecov.io/gh/Neoteroi/essentials-configuration)
-[![license](https://img.shields.io/github/license/Neoteroi/essentials-configuration.svg)](https://github.com/Neoteroi/essentials-configuration/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/Neoteroi/essentials-configuration.svg)](https://github.com/Neoteroi/essentials-configuration/blob/main/LICENSE)
 
 # Python configuration utilities
 Implementation of key-value pair based configuration for Python applications.
@@ -18,6 +18,14 @@ This library is freely inspired by .NET Core `Microsoft.Extensions.Configuration
 The main class is influenced by Luciano Ramalho`s example of
 JSON structure explorer using attribute notation, in his book [Fluent Python](http://shop.oreilly.com/product/0636920032519.do).
 
+## Overview
+
+`essentials-configuration` provides a way to handle configuration roots
+composed of different layers, such as configuration files and environmental
+variables. Layers are applied in order and can override each others' values,
+enabling different scenarios like configuration by environment and system
+instance.
+
 ## Supported sources:
 * **yaml** files
 * **json** files
@@ -25,6 +33,8 @@ JSON structure explorer using attribute notation, in his book [Fluent Python](ht
 * environmental variables
 * dictionaries
 * keys and values
+* [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration)
+* custom sources, implementing the `ConfigurationSource` interface
 
 ## Installation
 
@@ -32,11 +42,17 @@ JSON structure explorer using attribute notation, in his book [Fluent Python](ht
 pip install essentials-configuration
 ```
 
-Alternatively, to install it with support for `YAML` configuration files:
+To install with support for `YAML` configuration files:
 
 ```
 pip install essentials-configuration[yaml]
 ```
+
+## Extensions
+
+* Azure Key Vault secrets configuration source:
+  [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)
+
 
 # Examples
 
@@ -48,14 +64,14 @@ Settings are applied in order, so environmental variables with matching name
 override values from the `json` file.
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 from configuration.json import JSONFile
-from configuration.env import EnvironmentalVariables
+from configuration.env import EnvironmentVariables
 
-builder = ConfigurationBuilder()
-
-builder.add_source(JSONFile("settings.json"))
-builder.add_source(EnvironmentalVariables(prefix="APP_"))
+builder = ConfigurationBuilder(
+    JSONFile("settings.json"),
+    EnvironmentVariables(prefix="APP_")
+)
 
 config = builder.build()
 ```
@@ -76,7 +92,7 @@ And the environment has a variable named `APP_foo=AAA`:
 
 ```python
 >>> config
-<Configuration {'logging': {'level': 'INFO'}, 'example': 'Hello World', 'foo': 'AAA'}>
+<Configuration {'logging': '...', 'example': '...', 'foo': '...'}>
 >>> config.foo
 'AAA'
 >>> config.logging.level
@@ -91,14 +107,14 @@ environmental variables with matching name override values from the `yaml` file
 
 
 ```python
-from configuration import ConfigurationBuilder
-from configuration.env import EnvironmentalVariables
+from configuration.common import ConfigurationBuilder
+from configuration.env import EnvironmentVariables
 from configuration.yaml import YAMLFile
 
 builder = ConfigurationBuilder()
 
 builder.add_source(YAMLFile("settings.yaml"))
-builder.add_source(EnvironmentalVariables())
+builder.add_source(EnvironmentVariables())
 
 config = builder.build()
 ```
@@ -111,8 +127,8 @@ present, it is read to override values configured in `settings.yaml` file.
 ```python
 import os
 
-from configuration import ConfigurationBuilder
-from configuration.env import EnvironmentalVariables
+from configuration.common import ConfigurationBuilder
+from configuration.env import EnvironmentVariables
 from configuration.yaml import YAMLFile
 
 environment_name = os.environ["APP_ENVIRONMENT"]
@@ -123,7 +139,7 @@ builder.add_source(YAMLFile("settings.yaml"))
 
 builder.add_source(YAMLFile(f"settings.{environment_name}.yaml", optional=True))
 
-builder.add_source(EnvironmentalVariables(prefix="APP_"))
+builder.add_source(EnvironmentVariables(prefix="APP_"))
 
 config = builder.build()
 ```
@@ -131,7 +147,7 @@ config = builder.build()
 ### Filtering environmental variables by prefix
 
 ```python
-from configuration import Configuration
+from configuration.common import Configuration
 
 config = Configuration()
 
@@ -147,7 +163,7 @@ INI files are parsed using the built-in `configparser` module, therefore
 support `[DEFAULT]` section; all values are kept as strings.
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 from configuration.ini import INIFile
 
 builder = ConfigurationBuilder()
@@ -160,7 +176,7 @@ config = builder.build()
 ### Dictionaries
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 
 builder = ConfigurationBuilder()
 
@@ -180,7 +196,7 @@ assert config.example[1].id == 2
 ### Keys and values
 
 ```python
-from configuration import ConfigurationBuilder
+from configuration.common import ConfigurationBuilder
 
 builder = ConfigurationBuilder()
 
@@ -203,24 +219,22 @@ dictionary keys using the following notation for sub properties:
 * keys separated by "__", such as `a__d__e`
 
 ```python
-from configuration import ConfigurationBuilder, MapSource
+from configuration.common import ConfigurationBuilder, MapSource
 
 
 builder = ConfigurationBuilder(
-    [
-        MapSource(
-            {
-                "a": {
-                    "b": 1,
-                    "c": 2,
-                    "d": {
-                        "e": 3,
-                        "f": 4,
-                    },
-                }
+    MapSource(
+        {
+            "a": {
+                "b": 1,
+                "c": 2,
+                "d": {
+                    "e": 3,
+                    "f": 4,
+                },
             }
-        )
-    ]
+        }
+    )
 )
 
 config = builder.build()
@@ -243,20 +257,18 @@ assert config.a.d.f == 4
 import os
 
 builder = ConfigurationBuilder(
-    [
-        MapSource(
-            {
-                "a": {
-                    "b": 1,
-                    "c": 2,
-                    "d": {
-                        "e": 3,
-                        "f": 4,
-                    },
-                }
+    MapSource(
+        {
+            "a": {
+                "b": 1,
+                "c": 2,
+                "d": {
+                    "e": 3,
+                    "f": 4,
+                },
             }
-        )
-    ]
+        }
+    )
 )
 
 config = builder.build()
@@ -274,7 +286,7 @@ assert config.a.d.f == 4
 
 os.environ["a__d__e"] = "5"
 
-builder.sources.append(EnvironmentalVariables())
+builder.sources.append(EnvironmentVariables())
 
 config = builder.build()
 
@@ -285,17 +297,15 @@ assert config.a.d.e == "5"
 
 ```python
 builder = ConfigurationBuilder(
-    [
-        MapSource(
-            {
-                "b2c": [
-                    {"tenant": "1"},
-                    {"tenant": "2"},
-                    {"tenant": "3"},
-                ]
-            }
-        )
-    ]
+    MapSource(
+        {
+            "b2c": [
+                {"tenant": "1"},
+                {"tenant": "2"},
+                {"tenant": "3"},
+            ]
+        }
+    )
 )
 
 builder.add_value("b2c:1:tenant", "4")
@@ -307,3 +317,14 @@ assert config.b2c[1].tenant == "4"
 assert config.b2c[2].tenant == "3"
 
 ```
+
+### Goal and non-goals
+The goal of this package is to provide a way to handle configuration roots,
+fetching and composing settings from different sources, usually happening
+once at application's start.
+
+The library implements only a synchronous API and fetching of application
+settings atomically (it doesn't support generators), like application settings
+fetched from INI, JSON, or YAML files that are read once in memory entirely.
+An asynchronous API is currently out of the scope of this library, since its
+primary use case is to fetch configuration values once at application's start.

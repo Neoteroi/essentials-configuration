@@ -1,10 +1,10 @@
 import os
 from typing import Any, Dict, Optional
 
-from . import ConfigurationSource
+from ..common import ConfigurationSource
 
 
-class EnvironmentalVariables(ConfigurationSource):
+class EnvironmentVariables(ConfigurationSource):
     def __init__(self, prefix: Optional[str] = None, strip_prefix: bool = True) -> None:
         super().__init__()
         self.prefix = prefix

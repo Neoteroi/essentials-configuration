@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="essentials-configuration",
-    version="0.0.1",
+    version="0.0.2",
     description=(
         "Implementation of key-value pair based "
         "configuration for Python applications."
@@ -31,7 +31,14 @@ setup(
     author_email="roberto.prevato@gmail.com",
     keywords="configuration root core yaml ini json environment",
     license="MIT",
-    packages=["configuration"],
+    packages=[
+        "configuration.common",
+        "configuration.errors",
+        "configuration.env",
+        "configuration.ini",
+        "configuration.json",
+        "configuration.yaml",
+    ],
     install_requires=[],
     extras_require={
         "yaml": [

@@ -4,13 +4,13 @@ from typing import Any, Dict
 import pkg_resources
 import pytest
 
-from configuration import (
+from configuration.common import (
     Configuration,
     ConfigurationBuilder,
     ConfigurationSource,
     MapSource,
 )
-from configuration.env import EnvironmentalVariables
+from configuration.env import EnvironmentVariables
 from configuration.errors import ConfigurationOverrideError
 from configuration.ini import INIFile
 from configuration.json import JSONFile
@@ -28,7 +28,6 @@ def _get_file_path(file_name: str) -> str:
 
 def test_builder():
     builder = ConfigurationBuilder()
-    builder.add_source(EnvironmentalVariables())
 
     builder.add_map({"a": 1, "b": 2, "c": 3, "home": "foo"})
 
@@ -219,10 +218,21 @@ def test_apply_key_value_raises_for_invalid_overrides(source, key, value):
 
 
 def test_raises_attribute_error():
-    configuration = Configuration()
+    configuration = Configuration({"foo": "foo"})
+
+    assert configuration.foo == "foo"
 
     with pytest.raises(AttributeError):
         configuration.lorem_ipsum
+
+
+def test_raises_key_error():
+    configuration = Configuration({"foo": "foo"})
+
+    assert configuration["foo"] == "foo"
+
+    with pytest.raises(KeyError):
+        configuration["lorem_ipsum"]
 
 
 def test_raises_attribute_error_for_sub_property():
@@ -239,11 +249,11 @@ def test_raises_attribute_error_for_sub_property():
     [
         [
             Configuration({"section": {"one": True}}),
-            "<Configuration {'section': {'one': True}}>",
+            "<Configuration {'section': '...'}>",
         ],
         [
             Configuration({"a": "Hello World"}),
-            "<Configuration {'a': 'Hello World'}>",
+            "<Configuration {'a': '...'}>",
         ],
         [
             Configuration(),
@@ -288,10 +298,9 @@ def test_configuration_source_repr():
 def test_configuration_builder_repr():
     builder = ConfigurationBuilder()
     builder.add_source(FooSource())
-    builder.add_source(EnvironmentalVariables())
+    builder.add_source(EnvironmentVariables())
     assert (
-        repr(builder)
-        == "<ConfigurationBuilder [<FooSource>, <EnvironmentalVariables>]>"
+        repr(builder) == "<ConfigurationBuilder [<FooSource>, <EnvironmentVariables>]>"
     )
 
 
@@ -299,7 +308,7 @@ def test_configuration_builder_repr():
     "source", [INIFile("noop.no"), YAMLFile("noop.no"), JSONFile("noop.no")]
 )
 def test_file_source_raises_for_missing_file(source):
-    builder = ConfigurationBuilder([source])
+    builder = ConfigurationBuilder(source)
 
     with pytest.raises(FileNotFoundError):
         builder.build()
@@ -310,7 +319,7 @@ def test_file_source_raises_for_missing_file(source):
 )
 def test_optional_file_source_does_not_raise_for_missing_file(source):
     source.optional = True
-    builder = ConfigurationBuilder([source])
+    builder = ConfigurationBuilder(source)
     builder.build()
 
 
@@ -321,10 +330,8 @@ def test_to_dictionary_method_after_applying_env():
     os.environ["TEST_b__c__d"] = "200"
     os.environ["TEST_a__0"] = "3"
     builder = ConfigurationBuilder(
-        [
-            MapSource({"a": [1, 2, 3], "b": {"c": {"d": 100}}}),
-            EnvironmentalVariables("TEST_"),
-        ]
+        MapSource({"a": [1, 2, 3], "b": {"c": {"d": 100}}}),
+        EnvironmentVariables("TEST_"),
     )
 
     config = builder.build()
@@ -336,10 +343,8 @@ def test_to_dictionary_method_after_applying_env():
 
 def test_overriding_sub_properties():
     builder = ConfigurationBuilder(
-        [
-            MapSource({"a": {"b": {"c": 100}}, "a2": "oof"}),
-            MapSource({"a": {"b": {"c": 200}, "b2": "foo"}}),
-        ]
+        MapSource({"a": {"b": {"c": 100}}, "a2": "oof"}),
+        MapSource({"a": {"b": {"c": 200}, "b2": "foo"}}),
     )
 
     config = builder.build()

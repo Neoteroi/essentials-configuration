@@ -2,8 +2,8 @@ import json
 import os
 from typing import Any, Dict
 
-from . import ConfigurationSource
-from .errors import MissingConfigurationFileError
+from ..common import ConfigurationSource
+from ..errors import MissingConfigurationFileError
 
 
 class JSONFile(ConfigurationSource):
