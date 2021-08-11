@@ -10,8 +10,8 @@ from configuration.common import (
     ConfigurationSource,
     MapSource,
 )
-from configuration.errors import ConfigurationOverrideError
 from configuration.env import EnvironmentVariables
+from configuration.errors import ConfigurationOverrideError
 from configuration.ini import INIFile
 from configuration.json import JSONFile
 from configuration.yaml import YAMLFile
