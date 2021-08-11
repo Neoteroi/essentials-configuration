@@ -10,8 +10,8 @@ from configuration.common import (
     ConfigurationSource,
     MapSource,
 )
-from configuration.common.errors import ConfigurationOverrideError
-from configuration.env import EnvironmentalVariables
+from configuration.errors import ConfigurationOverrideError
+from configuration.env import EnvironmentVariables
 from configuration.ini import INIFile
 from configuration.json import JSONFile
 from configuration.yaml import YAMLFile
@@ -287,10 +287,9 @@ def test_configuration_source_repr():
 def test_configuration_builder_repr():
     builder = ConfigurationBuilder()
     builder.add_source(FooSource())
-    builder.add_source(EnvironmentalVariables())
+    builder.add_source(EnvironmentVariables())
     assert (
-        repr(builder)
-        == "<ConfigurationBuilder [<FooSource>, <EnvironmentalVariables>]>"
+        repr(builder) == "<ConfigurationBuilder [<FooSource>, <EnvironmentVariables>]>"
     )
 
 
@@ -321,7 +320,7 @@ def test_to_dictionary_method_after_applying_env():
     os.environ["TEST_a__0"] = "3"
     builder = ConfigurationBuilder(
         MapSource({"a": [1, 2, 3], "b": {"c": {"d": 100}}}),
-        EnvironmentalVariables("TEST_"),
+        EnvironmentVariables("TEST_"),
     )
 
     config = builder.build()

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import abc
 from typing import Any, Dict, List, Mapping, Optional
 
-from .errors import ConfigurationOverrideError, MissingConfigurationError
+from ..errors import ConfigurationOverrideError
 
 
 def apply_key_value(obj, key, value):
@@ -127,7 +127,10 @@ class Configuration:
         return item in self._data
 
     def __getitem__(self, name):
-        return self.__getattr__(name)
+        try:
+            return self.__getattr__(name)
+        except AttributeError:
+            raise KeyError(name)
 
     def __getattr__(self, name) -> Any:
         if name in self._data:
@@ -135,7 +138,9 @@ class Configuration:
             if isinstance(value, abc.Mapping) or isinstance(value, abc.MutableSequence):
                 return Configuration(value)  # type: ignore
             return value
-        raise MissingConfigurationError(name)
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{name}'"
+        )
 
     def __repr__(self) -> str:
         hidden_values = {key: "..." for key in self._data.keys()}

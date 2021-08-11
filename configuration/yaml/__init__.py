@@ -4,7 +4,7 @@ from typing import Any, Dict
 import yaml
 
 from ..common import ConfigurationSource
-from ..common.errors import MissingConfigurationFileError
+from ..errors import MissingConfigurationFileError
 
 
 class YAMLFile(ConfigurationSource):

@@ -4,7 +4,7 @@ from collections import abc
 from typing import Any, Dict
 
 from ..common import ConfigurationSource
-from ..common.errors import MissingConfigurationFileError
+from ..errors import MissingConfigurationFileError
 
 
 def _develop_configparser_values(parser):

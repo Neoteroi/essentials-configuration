@@ -33,6 +33,7 @@ setup(
     license="MIT",
     packages=[
         "configuration.common",
+        "configuration.errors",
         "configuration.env",
         "configuration.ini",
         "configuration.json",

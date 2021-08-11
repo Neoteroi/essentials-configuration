@@ -3,7 +3,7 @@ import os
 from typing import Any, Dict
 
 from ..common import ConfigurationSource
-from ..common.errors import MissingConfigurationFileError
+from ..errors import MissingConfigurationFileError
 
 
 class JSONFile(ConfigurationSource):
