@@ -33,7 +33,7 @@ instance.
 * environmental variables
 * dictionaries
 * keys and values
-* [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration)
+* [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)
 * custom sources, implementing the `ConfigurationSource` interface
 
 ## Installation
