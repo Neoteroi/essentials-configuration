@@ -352,3 +352,16 @@ def test_overriding_sub_properties():
     assert config.a.b.c == 200
     assert config.a.b2 == "foo"
     assert config.a2 == "oof"
+
+
+def test_get_value():
+    config = Configuration()
+
+    with pytest.raises(AttributeError):
+        config.foo
+
+    foo = config.get("foo", True)
+    assert foo is True
+
+    foo = config.get("foo", ...)
+    assert foo is ...

@@ -146,6 +146,12 @@ class Configuration:
         hidden_values = {key: "..." for key in self._data.keys()}
         return f"<Configuration {repr(hidden_values)}>"
 
+    def get(self, name, default_value=None):
+        try:
+            return self[name]
+        except KeyError:
+            return default_value
+
     @property
     def values(self) -> Dict[str, Any]:
         """
