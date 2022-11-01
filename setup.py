@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="essentials-configuration",
-    version="0.0.2",
+    version="0.0.3",
     description=(
         "Implementation of key-value pair based "
         "configuration for Python applications."
@@ -24,6 +24,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Operating System :: OS Independent",
     ],
     url="https://github.com/Neoteroi/essentials-configuration",
@@ -42,7 +43,7 @@ setup(
     install_requires=[],
     extras_require={
         "yaml": [
-            "PyYAML==5.4.1",
+            "PyYAML~=6.0",
         ]
     },
     include_package_data=True,
