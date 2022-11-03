@@ -57,6 +57,41 @@ pip install essentials-configuration[yaml]
 
 # Examples
 
+### TOML file
+
+```python
+from configuration.common import ConfigurationBuilder
+from configuration.toml import TOMLFile
+from configuration.env import EnvVars
+
+builder = ConfigurationBuilder(
+    TOMLFile("settings.toml"),
+    EnvVars(prefix="APP_")
+)
+
+config = builder.build()
+```
+
+For example, if the TOML file contains the following contents:
+
+```json
+title = "TOML Example"
+
+[owner]
+name = "Tom Preston-Werner"
+```
+
+And the environment has a variable named `APP_OWNER__NAME=AAA`:
+
+```python
+>>> config
+<Configuration {'title': '...', 'owner': '...'}>
+>>> config.title
+'TOML Example'
+>>> config.owner.name
+'AAA'
+```
+
 ### JSON file and environment variables
 
 In the following example, configuration values will include the structure
