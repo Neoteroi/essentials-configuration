@@ -10,11 +10,12 @@ from configuration.common import (
     ConfigurationSource,
     MapSource,
 )
-from configuration.env import EnvironmentVariables
+from configuration.env import EnvVars
 from configuration.errors import ConfigurationOverrideError
 from configuration.ini import INIFile
 from configuration.json import JSONFile
 from configuration.yaml import YAMLFile
+from configuration.toml import TOMLFile
 
 
 class FooSource(ConfigurationSource):
@@ -132,6 +133,19 @@ def test_yaml_file_2_full_load():
     assert config.foo[1].shares == 75.088
     assert config.services.encryption.key == "SECRET_KEY"
     assert config.services.images.processor.type == "local"
+
+
+def test_toml_file_1():
+    builder = ConfigurationBuilder()
+
+    builder.add_source(TOMLFile(_get_file_path("./toml_example_01.toml")))
+
+    config = builder.build()
+
+    assert config.title == "TOML Example"
+    assert config.owner.name == "Tom Preston-Werner"
+    assert config.database.ports == [8000, 8001, 8002]
+    assert config.servers.alpha.ip == "10.0.0.1"
 
 
 def test_json_file_1():
@@ -298,14 +312,15 @@ def test_configuration_source_repr():
 def test_configuration_builder_repr():
     builder = ConfigurationBuilder()
     builder.add_source(FooSource())
-    builder.add_source(EnvironmentVariables())
+    builder.add_source(EnvVars())
     assert (
         repr(builder) == "<ConfigurationBuilder [<FooSource>, <EnvironmentVariables>]>"
     )
 
 
 @pytest.mark.parametrize(
-    "source", [INIFile("noop.no"), YAMLFile("noop.no"), JSONFile("noop.no")]
+    "source",
+    [INIFile("noop.no"), YAMLFile("noop.no"), JSONFile("noop.no"), TOMLFile("noop.no")],
 )
 def test_file_source_raises_for_missing_file(source):
     builder = ConfigurationBuilder(source)
@@ -315,7 +330,8 @@ def test_file_source_raises_for_missing_file(source):
 
 
 @pytest.mark.parametrize(
-    "source", [INIFile("noop.no"), YAMLFile("noop.no"), JSONFile("noop.no")]
+    "source",
+    [INIFile("noop.no"), YAMLFile("noop.no"), JSONFile("noop.no"), TOMLFile("noop.no")],
 )
 def test_optional_file_source_does_not_raise_for_missing_file(source):
     source.optional = True
@@ -331,7 +347,7 @@ def test_to_dictionary_method_after_applying_env():
     os.environ["TEST_a__0"] = "3"
     builder = ConfigurationBuilder(
         MapSource({"a": [1, 2, 3], "b": {"c": {"d": 100}}}),
-        EnvironmentVariables("TEST_"),
+        EnvVars("TEST_"),
     )
 
     config = builder.build()

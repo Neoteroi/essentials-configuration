@@ -3,8 +3,8 @@ import os
 from collections import abc
 from typing import Any, Dict
 
-from ..common import ConfigurationSource
-from ..errors import MissingConfigurationFileError
+from configuration.common import ConfigurationSource
+from configuration.errors import MissingConfigurationFileError
 
 
 def _develop_configparser_values(parser):

@@ -3,8 +3,8 @@ from typing import Any, Dict
 
 import yaml
 
-from ..common import ConfigurationSource
-from ..errors import MissingConfigurationFileError
+from configuration.common import ConfigurationSource
+from configuration.errors import MissingConfigurationFileError
 
 
 class YAMLFile(ConfigurationSource):
@@ -22,10 +22,7 @@ class YAMLFile(ConfigurationSource):
                 return {}
             raise MissingConfigurationFileError(self.file_path)
 
-        with open(self.file_path, "rt", encoding="utf-8") as f:
+        with open(self.file_path, "rt", encoding="utf-8") as source:
             if self.safe_load:
-                data = yaml.safe_load(f)
-            else:
-                data = yaml.full_load(f)
-
-            return data
+                return yaml.safe_load(source)
+            return yaml.full_load(source)

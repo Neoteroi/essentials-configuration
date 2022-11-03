@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="essentials-configuration",
-    version="0.0.3",
+    version="1.0.0",
     description=(
         "Implementation of key-value pair based "
         "configuration for Python applications."
@@ -39,11 +39,14 @@ setup(
         "configuration.ini",
         "configuration.json",
         "configuration.yaml",
+        "configuration.toml",
     ],
-    install_requires=[],
+    install_requires=[
+        "tomli; python_version < '3.11'",
+    ],
     extras_require={
         "yaml": [
-            "PyYAML~=6.0",
+            "PyYAML",
         ]
     },
     include_package_data=True,
