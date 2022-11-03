@@ -6,7 +6,7 @@ try:
     import tomllib
 except ImportError:  # pragma: no cover
     # older Python
-    import tomli as tomlib  # noqa
+    import tomli as tomllib  # noqa
 
 from configuration.common import ConfigurationSource
 from configuration.errors import MissingConfigurationFileError
