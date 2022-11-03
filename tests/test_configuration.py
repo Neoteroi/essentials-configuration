@@ -14,8 +14,8 @@ from configuration.env import EnvVars
 from configuration.errors import ConfigurationOverrideError
 from configuration.ini import INIFile
 from configuration.json import JSONFile
-from configuration.yaml import YAMLFile
 from configuration.toml import TOMLFile
+from configuration.yaml import YAMLFile
 
 
 class FooSource(ConfigurationSource):
