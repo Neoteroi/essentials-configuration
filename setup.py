@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="essentials-configuration",
-    version="0.0.2",
+    version="1.0.0",
     description=(
         "Implementation of key-value pair based "
         "configuration for Python applications."
@@ -19,17 +19,16 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Operating System :: OS Independent",
     ],
     url="https://github.com/Neoteroi/essentials-configuration",
     author="RobertoPrevato",
     author_email="roberto.prevato@gmail.com",
-    keywords="configuration root core yaml ini json environment",
+    keywords="configuration root environment",
     license="MIT",
     packages=[
         "configuration.common",
@@ -38,11 +37,14 @@ setup(
         "configuration.ini",
         "configuration.json",
         "configuration.yaml",
+        "configuration.toml",
     ],
-    install_requires=[],
+    install_requires=[
+        "tomli; python_version < '3.11'",
+    ],
     extras_require={
         "yaml": [
-            "PyYAML==5.4.1",
+            "PyYAML",
         ]
     },
     include_package_data=True,

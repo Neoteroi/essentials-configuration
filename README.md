@@ -13,7 +13,7 @@ Implementation of key-value pair based configuration for Python applications.
 * support for nested structures and lists, using attribute notation
 * strategy to use environment specific settings
 
-This library is freely inspired by .NET Core `Microsoft.Extensions.Configuration` namespace and its pleasant design (_ref. [MSDN documentation](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1), [Microsoft Extensions Configuration Deep Dive](https://www.paraesthesia.com/archive/2018/06/20/microsoft-extensions-configuration-deep-dive/)_).
+This library is freely inspired by .NET Core `Microsoft.Extensions.Configuration` (_ref. [MSDN documentation](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1), [Microsoft Extensions Configuration Deep Dive](https://www.paraesthesia.com/archive/2018/06/20/microsoft-extensions-configuration-deep-dive/)_).
 
 The main class is influenced by Luciano Ramalho`s example of
 JSON structure explorer using attribute notation, in his book [Fluent Python](http://shop.oreilly.com/product/0636920032519.do).
@@ -21,16 +21,17 @@ JSON structure explorer using attribute notation, in his book [Fluent Python](ht
 ## Overview
 
 `essentials-configuration` provides a way to handle configuration roots
-composed of different layers, such as configuration files and environmental
+composed of different layers, such as configuration files and environment
 variables. Layers are applied in order and can override each others' values,
 enabling different scenarios like configuration by environment and system
 instance.
 
 ## Supported sources:
+* **toml** files
 * **yaml** files
 * **json** files
 * **ini** files
-* environmental variables
+* environment variables
 * dictionaries
 * keys and values
 * [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)
@@ -56,21 +57,56 @@ pip install essentials-configuration[yaml]
 
 # Examples
 
-### JSON file and environmental variables
+### TOML file
 
-In this example, configuration values will include the structure inside the
-file `settings.json` and environmental variables whose name starts with "APP_".
-Settings are applied in order, so environmental variables with matching name
-override values from the `json` file.
+```python
+from configuration.common import ConfigurationBuilder
+from configuration.toml import TOMLFile
+from configuration.env import EnvVars
+
+builder = ConfigurationBuilder(
+    TOMLFile("settings.toml"),
+    EnvVars(prefix="APP_")
+)
+
+config = builder.build()
+```
+
+For example, if the TOML file contains the following contents:
+
+```json
+title = "TOML Example"
+
+[owner]
+name = "Tom Preston-Werner"
+```
+
+And the environment has a variable named `APP_OWNER__NAME=AAA`:
+
+```python
+>>> config
+<Configuration {'title': '...', 'owner': '...'}>
+>>> config.title
+'TOML Example'
+>>> config.owner.name
+'AAA'
+```
+
+### JSON file and environment variables
+
+In the following example, configuration values will include the structure
+inside the file `settings.json` and environment variables whose name starts
+with "APP_". Settings are applied in order, so environment variables with
+matching name override values from the `json` file.
 
 ```python
 from configuration.common import ConfigurationBuilder
 from configuration.json import JSONFile
-from configuration.env import EnvironmentVariables
+from configuration.env import EnvVars
 
 builder = ConfigurationBuilder(
     JSONFile("settings.json"),
-    EnvironmentVariables(prefix="APP_")
+    EnvVars(prefix="APP_")
 )
 
 config = builder.build()
@@ -99,28 +135,30 @@ And the environment has a variable named `APP_foo=AAA`:
 'INFO'
 ```
 
-### YAML file and environmental variables
+### YAML file and environment variables
+
 In this example, configuration will include anything inside a file
-`settings.yaml` and environmental variables. Settings are applied in order, so
-environmental variables with matching name override values from the `yaml` file
+`settings.yaml` and environment variables. Settings are applied in order, so
+environment variables with matching name override values from the `yaml` file
 (using the `yaml` source requires also `PyYAML` package).
 
 
 ```python
 from configuration.common import ConfigurationBuilder
-from configuration.env import EnvironmentVariables
+from configuration.env import EnvVars
 from configuration.yaml import YAMLFile
 
 builder = ConfigurationBuilder()
 
 builder.add_source(YAMLFile("settings.yaml"))
-builder.add_source(EnvironmentVariables())
+builder.add_source(EnvVars())
 
 config = builder.build()
 ```
 
 ### YAML file, optional file by environment
-In this example, if an environmental variable with name `APP_ENVIRONMENT` and
+
+In this example, if an environment variable with name `APP_ENVIRONMENT` and
 value `dev` exists, and a configuration file with name `settings.dev.yaml` is
 present, it is read to override values configured in `settings.yaml` file.
 
@@ -128,7 +166,7 @@ present, it is read to override values configured in `settings.yaml` file.
 import os
 
 from configuration.common import ConfigurationBuilder
-from configuration.env import EnvironmentVariables
+from configuration.env import EnvVars
 from configuration.yaml import YAMLFile
 
 environment_name = os.environ["APP_ENVIRONMENT"]
@@ -139,22 +177,22 @@ builder.add_source(YAMLFile("settings.yaml"))
 
 builder.add_source(YAMLFile(f"settings.{environment_name}.yaml", optional=True))
 
-builder.add_source(EnvironmentVariables(prefix="APP_"))
+builder.add_source(EnvVars(prefix="APP_"))
 
 config = builder.build()
 ```
 
-### Filtering environmental variables by prefix
+### Filtering environment variables by prefix
 
 ```python
-from configuration.common import Configuration
+from configuration.common import ConfigurationBuilder
+from configuration.env import EnvVars
 
-config = Configuration()
+builder = ConfigurationBuilder()
 
-# will read only environmental variables
-# starting with "APP_", case insensitively, removing the "APP_" prefix by
-# default
-config.add_environmental_variables("APP_")
+builder.add_source(EnvVars(prefix="APP_"))
+
+config = builder.build()
 ```
 
 ### INI files
@@ -212,7 +250,7 @@ assert config.port == 44555
 
 ### Overriding nested values
 
-It is possible to override nested values by environmental variables or
+It is possible to override nested values by environment variables or
 dictionary keys using the following notation for sub properties:
 
 * keys separated by colon ":", such as `a:d:e`
@@ -253,13 +291,14 @@ assert config.a.d.f == 4
 ```
 
 ### Overriding nested values using env variables
+
 ```python
 import os
 
 builder = ConfigurationBuilder(
     MapSource(
         {
-            "a": {
+            "a": {Env
                 "b": 1,
                 "c": 2,
                 "d": {
@@ -286,7 +325,7 @@ assert config.a.d.f == 4
 
 os.environ["a__d__e"] = "5"
 
-builder.sources.append(EnvironmentVariables())
+builder.sources.append(EnvVars())
 
 config = builder.build()
 
@@ -319,6 +358,7 @@ assert config.b2c[2].tenant == "3"
 ```
 
 ### Goal and non-goals
+
 The goal of this package is to provide a way to handle configuration roots,
 fetching and composing settings from different sources, usually happening
 once at application's start.

@@ -2,8 +2,8 @@ import json
 import os
 from typing import Any, Dict
 
-from ..common import ConfigurationSource
-from ..errors import MissingConfigurationFileError
+from configuration.common import ConfigurationSource
+from configuration.errors import MissingConfigurationFileError
 
 
 class JSONFile(ConfigurationSource):
@@ -21,5 +21,5 @@ class JSONFile(ConfigurationSource):
                 return {}
             raise MissingConfigurationFileError(self.file_path)
 
-        with open(self.file_path, "rt", encoding="utf-8") as source_file:
-            return json.load(source_file)
+        with open(self.file_path, "rt", encoding="utf-8") as source:
+            return json.load(source)

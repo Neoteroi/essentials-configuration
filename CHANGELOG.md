@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2022-11-04 :snake:
+- Upgrades pinned dependencies for Python 3.11
+- Adds the alias "EnvVars" to reduce the verbosity of the class name "EnvironmentVariables"
+- Adds support for TOML sources
+- Replaces relative imports with absolute imports
+- Workflow maintenance
+
 ## [0.0.2] - 2021-08-11 :cactus:
 - Forks a new project from
   [roconfiguration](https://github.com/Neoteroi/roconfiguration), with name

@@ -1,7 +1,7 @@
 import os
 from typing import Any, Dict, Optional
 
-from ..common import ConfigurationSource
+from configuration.common import ConfigurationSource
 
 
 class EnvironmentVariables(ConfigurationSource):
@@ -24,3 +24,6 @@ class EnvironmentVariables(ConfigurationSource):
                 key_lower = key_lower[len(prefix) :]
             values[key_lower] = value
         return values
+
+
+EnvVars = EnvironmentVariables

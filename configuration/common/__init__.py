@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import abc
 from typing import Any, Dict, List, Mapping, Optional
 
-from ..errors import ConfigurationOverrideError
+from configuration.errors import ConfigurationOverrideError
 
 
 def apply_key_value(obj, key, value):
