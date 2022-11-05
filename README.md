@@ -74,7 +74,7 @@ config = builder.build()
 
 For example, if the TOML file contains the following contents:
 
-```json
+```toml
 title = "TOML Example"
 
 [owner]
