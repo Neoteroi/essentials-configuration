@@ -298,7 +298,7 @@ import os
 builder = ConfigurationBuilder(
     MapSource(
         {
-            "a": {Env
+            "a": {
                 "b": 1,
                 "c": 2,
                 "d": {
