@@ -1,10 +1,8 @@
 import configparser
-import os
 from collections import abc
 from typing import Any, Dict
 
-from configuration.common import ConfigurationSource
-from configuration.errors import MissingConfigurationFileError
+from configuration.common.files import FileConfigurationSource
 
 
 def _develop_configparser_values(parser):
@@ -21,23 +19,8 @@ def _develop_configparser_values(parser):
     return values
 
 
-class INIFile(ConfigurationSource):
-    def __init__(self, file_path: str, optional: bool = False) -> None:
-        """
-        Creates a new instance of INIFileSource, to read configuration from the INI
-        file at the given path. If optional, nothing is returned if the file is not
-        found.
-        """
-        super().__init__()
-        self.file_path = file_path
-        self.optional = optional
-
-    def get_values(self) -> Dict[str, Any]:
-        if not os.path.exists(self.file_path):
-            if self.optional:
-                return {}
-            raise MissingConfigurationFileError(self.file_path)
-
+class INIFile(FileConfigurationSource):
+    def read_source(self) -> Dict[str, Any]:
         parser = configparser.ConfigParser()
-        parser.read(self.file_path)
+        parser.read(self.file_path, encoding="utf8")
         return _develop_configparser_values(parser)

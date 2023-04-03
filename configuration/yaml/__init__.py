@@ -1,27 +1,18 @@
-import os
 from typing import Any, Dict
 
 import yaml
 
-from configuration.common import ConfigurationSource
-from configuration.errors import MissingConfigurationFileError
+from configuration.common.files import FileConfigurationSource, PathType
 
 
-class YAMLFile(ConfigurationSource):
+class YAMLFile(FileConfigurationSource):
     def __init__(
-        self, file_path: str, optional: bool = False, safe_load: bool = True
+        self, file_path: PathType, optional: bool = False, safe_load: bool = True
     ) -> None:
-        super().__init__()
-        self.file_path = file_path
-        self.optional = optional
+        super().__init__(file_path, optional)
         self.safe_load = safe_load
 
-    def get_values(self) -> Dict[str, Any]:
-        if not os.path.exists(self.file_path):
-            if self.optional:
-                return {}
-            raise MissingConfigurationFileError(self.file_path)
-
+    def read_source(self) -> Dict[str, Any]:
         with open(self.file_path, "rt", encoding="utf-8") as source:
             if self.safe_load:
                 return yaml.safe_load(source)
