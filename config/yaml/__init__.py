@@ -2,7 +2,7 @@ from typing import Any, Dict
 
 import yaml
 
-from configuration.common.files import FileConfigurationSource, PathType
+from config.common.files import FileConfigurationSource, PathType
 
 
 class YAMLFile(FileConfigurationSource):

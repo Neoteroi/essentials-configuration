@@ -2,7 +2,7 @@ import configparser
 from collections import abc
 from typing import Any, Dict
 
-from configuration.common.files import FileConfigurationSource
+from config.common.files import FileConfigurationSource
 
 
 def _develop_configparser_values(parser):

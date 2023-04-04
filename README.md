@@ -60,9 +60,9 @@ pip install essentials-configuration[yaml]
 ### TOML file
 
 ```python
-from configuration.common import ConfigurationBuilder
-from configuration.toml import TOMLFile
-from configuration.env import EnvVars
+from config.common import ConfigurationBuilder
+from config.toml import TOMLFile
+from config.env import EnvVars
 
 builder = ConfigurationBuilder(
     TOMLFile("settings.toml"),
@@ -100,9 +100,9 @@ with "APP_". Settings are applied in order, so environment variables with
 matching name override values from the `json` file.
 
 ```python
-from configuration.common import ConfigurationBuilder
-from configuration.json import JSONFile
-from configuration.env import EnvVars
+from config.common import ConfigurationBuilder
+from config.json import JSONFile
+from config.env import EnvVars
 
 builder = ConfigurationBuilder(
     JSONFile("settings.json"),
@@ -144,9 +144,9 @@ environment variables with matching name override values from the `yaml` file
 
 
 ```python
-from configuration.common import ConfigurationBuilder
-from configuration.env import EnvVars
-from configuration.yaml import YAMLFile
+from config.common import ConfigurationBuilder
+from config.env import EnvVars
+from config.yaml import YAMLFile
 
 builder = ConfigurationBuilder()
 
@@ -165,9 +165,9 @@ present, it is read to override values configured in `settings.yaml` file.
 ```python
 import os
 
-from configuration.common import ConfigurationBuilder
-from configuration.env import EnvVars
-from configuration.yaml import YAMLFile
+from config.common import ConfigurationBuilder
+from config.env import EnvVars
+from config.yaml import YAMLFile
 
 environment_name = os.environ["APP_ENVIRONMENT"]
 
@@ -185,8 +185,8 @@ config = builder.build()
 ### Filtering environment variables by prefix
 
 ```python
-from configuration.common import ConfigurationBuilder
-from configuration.env import EnvVars
+from config.common import ConfigurationBuilder
+from config.env import EnvVars
 
 builder = ConfigurationBuilder()
 
@@ -201,8 +201,8 @@ INI files are parsed using the built-in `configparser` module, therefore
 support `[DEFAULT]` section; all values are kept as strings.
 
 ```python
-from configuration.common import ConfigurationBuilder
-from configuration.ini import INIFile
+from config.common import ConfigurationBuilder
+from config.ini import INIFile
 
 builder = ConfigurationBuilder()
 
@@ -214,7 +214,7 @@ config = builder.build()
 ### Dictionaries
 
 ```python
-from configuration.common import ConfigurationBuilder
+from config.common import ConfigurationBuilder
 
 builder = ConfigurationBuilder()
 
@@ -234,7 +234,7 @@ assert config.example[1].id == 2
 ### Keys and values
 
 ```python
-from configuration.common import ConfigurationBuilder
+from config.common import ConfigurationBuilder
 
 builder = ConfigurationBuilder()
 
@@ -257,7 +257,7 @@ dictionary keys using the following notation for sub properties:
 * keys separated by "__", such as `a__d__e`
 
 ```python
-from configuration.common import ConfigurationBuilder, MapSource
+from config.common import ConfigurationBuilder, MapSource
 
 
 builder = ConfigurationBuilder(

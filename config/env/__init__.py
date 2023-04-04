@@ -1,7 +1,7 @@
 import os
 from typing import Any, Dict, Optional
 
-from configuration.common import ConfigurationSource
+from config.common import ConfigurationSource
 
 
 class EnvironmentVariables(ConfigurationSource):

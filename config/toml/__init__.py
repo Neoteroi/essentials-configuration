@@ -1,6 +1,6 @@
 from typing import Any, Callable, Dict
 
-from configuration.common.files import FileConfigurationSource, PathType
+from config.common.files import FileConfigurationSource, PathType
 
 try:
     # Python 3.11

@@ -4,18 +4,18 @@ from typing import Any, Dict
 import pkg_resources
 import pytest
 
-from configuration.common import (
+from config.common import (
     Configuration,
     ConfigurationBuilder,
     ConfigurationSource,
     MapSource,
 )
-from configuration.env import EnvVars
-from configuration.errors import ConfigurationOverrideError
-from configuration.ini import INIFile
-from configuration.json import JSONFile
-from configuration.toml import TOMLFile
-from configuration.yaml import YAMLFile
+from config.env import EnvVars
+from config.errors import ConfigurationOverrideError
+from config.ini import INIFile
+from config.json import JSONFile
+from config.toml import TOMLFile
+from config.yaml import YAMLFile
 
 
 class FooSource(ConfigurationSource):

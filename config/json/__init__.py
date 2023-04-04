@@ -1,7 +1,7 @@
 import json
 from typing import Any, Dict
 
-from configuration.common.files import FileConfigurationSource
+from config.common.files import FileConfigurationSource
 
 
 class JSONFile(FileConfigurationSource):

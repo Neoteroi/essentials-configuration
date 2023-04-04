@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import abc
 from typing import Any, Dict, List, Mapping, Optional
 
-from configuration.errors import ConfigurationOverrideError
+from config.errors import ConfigurationOverrideError
 
 
 def apply_key_value(obj, key, value):
@@ -14,7 +14,6 @@ def apply_key_value(obj, key, value):
             sub_property = obj
             last_part = parts[-1]
             for part in parts[:-1]:
-
                 if isinstance(sub_property, abc.MutableSequence):
                     try:
                         index = int(part)

@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2023-04-?? :fish:
+- Renames the main namespace to `config`.
+- Migrates to `pyproject.toml`.
+- Adds support to read secrets stored in the user folder, for development purpose.
+- Adds a CLI to administer local secrets stored in the user folder.
+- Adds a `FileConfigurationSource` base class.
+
 ## [1.0.0] - 2022-11-04 :snake:
 - Upgrades pinned dependencies for Python 3.11
 - Adds the alias "EnvVars" to reduce the verbosity of the class name "EnvironmentVariables"
