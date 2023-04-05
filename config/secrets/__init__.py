@@ -121,11 +121,15 @@ class UserSecretsManager(UserSecrets):
         )
 
     def remove_secret(self, key: str):
+        if not self.secrets_file_path.exists():
+            self.logger.info("There are no secrets configured.")
+            return
         values = self.get_values()
         try:
             del values[key]
         except KeyError:
             pass
+
         self.write(values)
 
     def write(self, values):
@@ -136,9 +140,12 @@ class UserSecretsManager(UserSecrets):
         self.logger.debug("Updated file: %s", self.secrets_file_path)
 
     def list_projects(self):
-        for child in self.get_base_folder().iterdir():
-            if child.is_dir():
-                self.logger.info(child.name)
+        try:
+            for child in self.get_base_folder().iterdir():
+                if child.is_dir():
+                    self.logger.info(child.name)
+        except FileNotFoundError:
+            self.logger.info("There are no secrets configured.")
 
     def show_info(self):
         if self.secrets_file_path.exists():

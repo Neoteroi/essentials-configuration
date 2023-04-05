@@ -32,6 +32,7 @@ instance.
 * **json** files
 * **ini** files
 * environment variables
+* secrets stored in the user folder, for development purpose
 * dictionaries
 * keys and values
 * [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)

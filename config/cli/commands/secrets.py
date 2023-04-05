@@ -16,7 +16,7 @@ def _strip(value):
 @click.group()
 def secrets():
     """
-    Commands to handle user secrets.
+    Commands to handle user secrets, for local development.
     """
 
 
