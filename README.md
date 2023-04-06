@@ -172,13 +172,10 @@ from config.yaml import YAMLFile
 
 environment_name = os.environ["APP_ENVIRONMENT"]
 
-builder = ConfigurationBuilder()
-
-builder.add_source(YAMLFile("settings.yaml"))
-
-builder.add_source(YAMLFile(f"settings.{environment_name}.yaml", optional=True))
-
-builder.add_source(EnvVars(prefix="APP_"))
+builder = ConfigurationBuilder(
+    YAMLFile("settings.yaml"),
+    YAMLFile(f"settings.{environment_name}.yaml", optional=True)
+)
 
 config = builder.build()
 ```

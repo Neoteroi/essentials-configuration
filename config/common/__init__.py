@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from collections import abc
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, List, Mapping, Optional, Type, TypeVar
 
 from config.errors import ConfigurationOverrideError
+
+T = TypeVar("T")
 
 
 def apply_key_value(obj, key, value):
@@ -151,6 +153,16 @@ class Configuration:
         Returns a copy of the dictionary of current settings.
         """
         return self._data.copy()
+
+    def bind(self, cls: Type[T], *path: str) -> T:
+        """
+        Returns an instance of the given type, using the current values as input.
+        This enables validation of configuration sections.
+        """
+        values = self.values
+        for fragment in path:
+            values = values[fragment]
+        return cls(**values)
 
 
 class ConfigurationBuilder:

@@ -21,7 +21,7 @@ classifiers = [
 ]
 keywords = ["configuration", "root", "management", "strategy"]
 
-dependencies = ["tomli; python_version < '3.11'"]
+dependencies = ["tomli; python_version < '3.11'", "python-dotenv"]
 
 [project.optional-dependencies]
 yaml = ["PyYAML"]

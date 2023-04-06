@@ -50,16 +50,16 @@ class UserSecrets(ConfigurationSource):
         return self._source.get_values()
 
 
-def get_project_name() -> Optional[str]:
+def get_project_name() -> str:
     pyproject = Path("pyproject.toml").resolve()
 
     if pyproject.exists():
         with open(pyproject, "rb") as source:
             data = tomllib.load(source)
-        project = data.get("project")
-        name = project.get("name")
-        if name:
-            return name
+        try:
+            return data["project"]["name"]
+        except KeyError:
+            pass
 
     return uuid4().hex
 

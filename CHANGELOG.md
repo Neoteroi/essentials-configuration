@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2023-04-?? :fish:
 - Renames the main namespace to `config`.
-- Migrates to `pyproject.toml`.
+- Adds a method to obtain type checked configuration items (e.g. with `pydantic`
+  or custom classes).
 - Adds support to read secrets stored in the user folder, for development purpose.
 - Adds a CLI to administer local secrets stored in the user folder.
 - Adds a `FileConfigurationSource` base class.
+- Migrates to `pyproject.toml`.
+- Add support for `.env` files bound using `python-dotenv`.
 
 ## [1.0.0] - 2022-11-04 :snake:
 - Upgrades pinned dependencies for Python 3.11

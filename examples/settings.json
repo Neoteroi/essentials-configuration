@@ -1,0 +1,7 @@
+{
+    "logging": {
+        "level": "INFO"
+    },
+    "example": "Hello World",
+    "foo": "foo"
+}
