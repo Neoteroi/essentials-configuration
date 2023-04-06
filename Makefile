@@ -29,8 +29,8 @@ test:
 	pytest
 
 
-testcov:
-	pytest --cov-report html --cov=configuration tests/
+test-cov:
+	pytest --cov-report html --cov=config tests/
 
 
 lint: check-flake8 check-isort check-black
