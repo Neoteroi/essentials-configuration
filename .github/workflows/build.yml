@@ -55,6 +55,7 @@ jobs:
         run: |
           echo "Running linters"
 
+          pip install black
           flake8 .
           isort --check-only . 2>&1
           black --check . 2>&1
