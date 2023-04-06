@@ -8,7 +8,6 @@ from uuid import uuid4
 from config.common import ConfigurationSource
 from config.json import JSONFile
 
-
 try:
     # Python 3.11
     import tomllib
