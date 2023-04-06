@@ -73,15 +73,18 @@ jobs:
 
       - name: Install distribution dependencies
         run: pip install build
+        if: matrix.python-version == 3.11
 
       - name: Create distribution package
         run: python -m build
+        if: matrix.python-version == 3.11
 
       - name: Upload distribution package
         uses: actions/upload-artifact@master
         with:
           name: dist
           path: dist
+        if: matrix.python-version == 3.11
 
   publish:
     runs-on: ubuntu-latest

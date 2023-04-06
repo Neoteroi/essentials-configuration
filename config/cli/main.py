@@ -1,8 +1,8 @@
-import logging
+import os
 
 import click
 
-from config.cli.commands.secrets import secrets
+from config.secrets.cli import secrets
 
 
 @click.group()
@@ -13,11 +13,9 @@ def main(verbose: bool):
     """
     essentials-configuration CLI
     """
-    from config.cli.logs import logger
 
     if verbose:
-        logger.setLevel(logging.DEBUG)
-        logger.debug("Running in --verbose mode")
+        os.environ["EC_VERBOSE"] = "1"
 
 
 main.add_command(secrets)
