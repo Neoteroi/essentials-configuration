@@ -31,16 +31,16 @@ enabling different scenarios like configuration by environment and system
 instance.
 
 ## Supported sources:
-* **toml** files
-* **yaml** files
-* **json** files
-* **ini** files
-* environment variables
-* secrets stored in the user folder, for development purpose
-* dictionaries
-* keys and values
-* [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)
-* custom sources, implementing the `ConfigurationSource` interface
+- **toml** files
+- **yaml** files
+- **json** files
+- **ini** files
+- environment variables
+- secrets stored in the user folder, for development purpose
+- dictionaries
+- keys and values
+- [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts), using [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)
+- custom sources, implementing the `ConfigurationSource` interface
 
 ## Installation
 
@@ -432,6 +432,45 @@ config = builder.build()
 assert config.b2c[0].tenant == "5"
 assert config.b2c[1].tenant == "2"
 assert config.b2c[2].tenant == "3"
+```
+
+### Typed config
+
+To bind configuration sections with types, for example to use `pydantic` to
+validate application settings, use the `config.bind` method like in
+the following example:
+
+```yaml
+# example-01.yaml
+foo:
+  value: "foo"
+  x: 100
+```
+
+```python
+# example
+from pydantic import BaseModel
+
+from config.common import ConfigurationBuilder
+from config.yaml import YAMLFile
+
+
+class FooSettings(BaseModel):
+    value: str
+    x: int
+
+
+builder = ConfigurationBuilder(YAMLFile("example-01.yaml"))
+
+config = builder.build()
+
+# the bind method accepts a variable number of fragments to
+# obtain the configuration section that should be used to instantiate the given type
+foo_settings = config.bind(FooSettings, "foo")
+
+assert isinstance(foo_settings, FooSettings)
+assert foo_settings.value == "foo"
+assert foo_settings.x == 100
 ```
 
 ### Goal and non-goals
