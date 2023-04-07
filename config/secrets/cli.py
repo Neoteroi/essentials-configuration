@@ -68,6 +68,11 @@ name = "{name}"
         values = apply_key_value(values, key, value)
         self._write_values(values)
 
+    def get_secret(self, key: str):
+        values = self.get_values()
+        if key in values:
+            self.logger.info(values[key])
+
     def set_many_secrets(self, data):
         values = self.get_values()
         values.update(data)
@@ -79,7 +84,7 @@ name = "{name}"
             json.dumps(values, indent=4, ensure_ascii=True, sort_keys=True)
         )
 
-    def remove_secret(self, key: str):
+    def del_secret(self, key: str):
         if not self.secrets_file_path.exists():
             self.logger.info("There are no secrets configured.")
             return
@@ -88,8 +93,8 @@ name = "{name}"
             del values[key]
         except KeyError:
             pass
-
-        self.write(values)
+        else:
+            self.write(values)
 
     def write(self, values):
         self.secrets_file_path.write_text(
@@ -103,7 +108,7 @@ name = "{name}"
             for child in self.get_base_folder().iterdir():
                 if child.is_dir():
                     self.logger.info(child.name)
-        except FileNotFoundError:
+        except FileNotFoundError:  # pragma: no cover
             self.logger.info("There are no secrets configured.")
 
     def show_info(self):
@@ -111,12 +116,6 @@ name = "{name}"
             self.logger.info(f"Secrets are stored at: {self.secrets_file_path}")
         else:
             self.logger.info("There is no secrets file configured.")
-
-
-def _strip(value):
-    if "'" in value:
-        return value.strip("'")
-    return value
 
 
 @click.group()
@@ -153,7 +152,23 @@ def set_secret(key: str, value: str, project: Optional[str]):
 
     config secrets set "some" "example" -p "foo"
     """
-    UserSecretsManager(project).set_secret(_strip(key), _strip(value))
+    UserSecretsManager(project).set_secret(key, value)
+
+
+@click.command(name="get")
+@click.argument("key")
+@click.option("--project", "-p", required=False)
+def get_secret(key: str, project: Optional[str]):
+    """
+    Get a secret in a user file by key and value.
+    If a project name is specified, it is used, otherwise a value is obtained
+    from a `pyproject.toml` file, or generated.
+
+    Examples:
+
+    config secrets get "key"
+    """
+    UserSecretsManager(project).get_secret(key)
 
 
 @click.command(name="set-many")
@@ -177,14 +192,14 @@ def set_many_secrets(file, project: Optional[str]):
     UserSecretsManager(project).set_many_secrets(data)
 
 
-@click.command(name="remove")
+@click.command(name="del")
 @click.argument("key")
 @click.option("--project", "-p", required=False)
-def remove_secret(key: str, project: Optional[str]):
+def del_secret(key: str, project: Optional[str]):
     """
-    Remove a secret for a project, by key.
+    Delete a secret for a project, by key.
     """
-    UserSecretsManager(project).remove_secret(_strip(key))
+    UserSecretsManager(project).del_secret(key)
 
 
 @click.command(name="show")
@@ -214,9 +229,10 @@ def show_info(project: Optional[str]):
 
 
 secrets.add_command(init_secrets)
+secrets.add_command(get_secret)
 secrets.add_command(set_secret)
 secrets.add_command(set_many_secrets)
-secrets.add_command(remove_secret)
+secrets.add_command(del_secret)
 secrets.add_command(show_secrets)
 secrets.add_command(list_groups)
 secrets.add_command(show_info)

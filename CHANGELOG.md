@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2023-04-?? :fish:
+## [2.0.0] - 2023-04-07 :egg:
 - Renames the main namespace to `config`.
 - Adds a method to obtain type checked configuration items (e.g. with `pydantic`
   or custom classes).
