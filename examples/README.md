@@ -34,3 +34,15 @@ environment specific settings file.
 ## example-05.py
 
 This example shows how nested values can be overridden using strings.
+
+
+## example-06.py
+
+This example shows how to override nested properties in arrays using
+environment variables.
+
+
+## example-07.py
+
+This example shows how to override nested properties using environment
+variables.

@@ -160,7 +160,7 @@ def set_secret(key: str, value: str, project: Optional[str]):
 @click.option("--project", "-p", required=False)
 def get_secret(key: str, project: Optional[str]):
     """
-    Get a secret in a user file by key and value.
+    Get a secret in a user file by key.
     If a project name is specified, it is used, otherwise a value is obtained
     from a `pyproject.toml` file, or generated.
 

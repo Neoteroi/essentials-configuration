@@ -8,10 +8,14 @@
 Implementation of key-value pair based configuration for Python applications.
 
 **Features:**
-* support for most common sources of application settings
-* support for overriding settings in sequence
-* support for nested structures and lists, using attribute notation
-* strategy to use environment specific settings
+- support for most common sources of application settings
+- support for overriding settings in sequence
+- support for nested structures and lists, using attribute notation
+- strategy to use environment specific settings
+- features to handle secrets and values stored in the user folder, for local
+  development
+- features to support validation of configuration items, for example using
+  `pydantic` or user defined classes
 
 This library is freely inspired by .NET Core `Microsoft.Extensions.Configuration` (_ref. [MSDN documentation](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1), [Microsoft Extensions Configuration Deep Dive](https://www.paraesthesia.com/archive/2018/06/20/microsoft-extensions-configuration-deep-dive/)_).
 
@@ -50,11 +54,17 @@ To install with support for `YAML` configuration files:
 pip install essentials-configuration[yaml]
 ```
 
+To install with support for `YAML` configuration files and the CLI to handle
+user secrets:
+
+```
+pip install essentials-configuration[full]
+```
+
 ## Extensions
 
 * Azure Key Vault secrets configuration source:
   [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault)
-
 
 # Examples
 
@@ -246,6 +256,67 @@ assert config.host == "localhost"
 assert config.port == 44555
 ```
 
+### User secrets
+
+The library provides a strategy to handle secrets during local development,
+storing them into the user folder.
+
+The following example shows how secrets can be configured for a project:
+
+```bash
+config secrets init
+config secrets set "Foo" "Some secret value"
+```
+
+Then, from the Python app, it's possible to load the secrets from the user
+folder:
+
+```python
+from config.common import ConfigurationBuilder
+from config.json import JSONFile
+from config.secrets import UserSecrets
+
+builder = ConfigurationBuilder(JSONFile("settings.json"), UserSecrets())
+
+config = builder.build()
+
+print(config)
+# config contains both values from `settings.json`, and secrets read from the user
+# folder
+```
+
+Secrets are optional and should be used only for local development, they are
+stored in unencrypted form in the user's folder.
+
+Production apps should use dedicated services to handle secrets, like
+[Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts),
+[AWS Secrets Manager](https://aws.amazon.com/secrets-manager/), or similar services.
+For Azure Key Vault, an implementation is provided in [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault).
+
+## Handling user secrets
+
+User secrets can be handled using the provided `config` CLI.
+
+```
+config secrets
+Usage: config secrets [OPTIONS] COMMAND [ARGS]...
+
+  Commands to handle user secrets, for local development.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  del       Delete a secret for a project, by key.
+  get       Get a secret in a user file by key.
+  info      Show information about secrets for a project.
+  init      Initialize user secrets for the current folder.
+  list      List all projects configured for secrets stored in the user...
+  set       Set a secret in a user file by key and value.
+  set-many  Set many secrets read from a JSON file passed through stdin.
+  show      Show the local secrets for a project.
+```
+
 ### Overriding nested values
 
 It is possible to override nested values by environment variables or
@@ -293,6 +364,9 @@ assert config.a.d.f == 4
 ```python
 import os
 
+from config.common import ConfigurationBuilder, MapSource
+from config.env import EnvVars
+
 builder = ConfigurationBuilder(
     MapSource(
         {
@@ -333,6 +407,11 @@ assert config.a.d.e == "5"
 ### Overriding values in list items using env variables
 
 ```python
+import os
+
+from config.common import ConfigurationBuilder, MapSource
+from config.env import EnvVars
+
 builder = ConfigurationBuilder(
     MapSource(
         {
@@ -342,17 +421,17 @@ builder = ConfigurationBuilder(
                 {"tenant": "3"},
             ]
         }
-    )
+    ),
+    EnvVars(),
 )
 
-builder.add_value("b2c:1:tenant", "4")
+os.environ["b2c__0__tenant"] = "5"
 
 config = builder.build()
 
-assert config.b2c[0].tenant == "1"
-assert config.b2c[1].tenant == "4"
+assert config.b2c[0].tenant == "5"
+assert config.b2c[1].tenant == "2"
 assert config.b2c[2].tenant == "3"
-
 ```
 
 ### Goal and non-goals
