@@ -2,7 +2,7 @@
 
 
 artifacts: test
-	python setup.py sdist bdist_wheel
+	python -m build
 
 
 clean:
@@ -10,23 +10,27 @@ clean:
 
 
 prepforbuild:
-	pip install --upgrade twine setuptools wheel
+	pip install build
 
 
-testrelease:
-	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+build:
+	python -m build
 
 
-release: clean artifacts
-	twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
+test-release:
+	twine upload --repository testpypi dist/*
+
+
+release:
+	twine upload --repository pypi dist/*
 
 
 test:
 	pytest
 
 
-testcov:
-	pytest --cov-report html --cov=configuration tests/
+test-cov:
+	pytest --cov-report html --cov=config tests/
 
 
 lint: check-flake8 check-isort check-black
