@@ -17,7 +17,7 @@ Implementation of key-value pair based configuration for Python applications.
 - features to support validation of configuration items, for example using
   `pydantic`, or user defined classes
 
-This library is freely inspired by .NET Core `Microsoft.Extensions.Configuration` (_ref. [MSDN documentation](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1).
+This library is freely inspired by .NET Core `Microsoft.Extensions.Configuration` (_ref. [MSDN documentation](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1), [Microsoft Extensions Configuration Deep Dive](https://www.paraesthesia.com/archive/2018/06/20/microsoft-extensions-configuration-deep-dive/)_).
 
 The main class is influenced by Luciano Ramalho`s example of
 JSON structure explorer using attribute notation, in his book [Fluent Python](http://shop.oreilly.com/product/0636920032519.do).
