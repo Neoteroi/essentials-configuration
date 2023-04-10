@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "essentials-configuration"
-version = "2.0.1"
+version = "2.0.2"
 authors = [{ name = "Roberto Prevato", email = "roberto.prevato@gmail.com" }]
 description = "Implementation of key-value pair based configuration for Python applications."
 readme = "README.md"
@@ -30,25 +30,8 @@ full = ["PyYAML", "click"]
 [project.scripts]
 config = "config.cli.main:main"
 
-[tool.hatch.build.targets.sdist]
-exclude = [
-    "/.github",
-    "/docs",
-    "/examples",
-    "/deps",
-    "/htmlcov",
-    "/tests",
-    "Makefile",
-    "CODE_OF_CONDUCT.md",
-    ".isort.cfg",
-    ".gitignore",
-    ".flake8",
-    "junit",
-    "requirements.txt",
-    "mypy.ini",
-    "pytest.ini",
-    "venv",
-]
+[tool.setuptools.package-data]
+config = ["*/py.typed"]
 
 [project.urls]
 "Homepage" = "https://github.com/Neoteroi/essentials-configuration"
