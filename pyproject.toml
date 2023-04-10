@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "essentials-configuration"
@@ -30,8 +30,14 @@ full = ["PyYAML", "click"]
 [project.scripts]
 config = "config.cli.main:main"
 
-[tool.setuptools.package-data]
-config = ["*/py.typed"]
+[tool.hatch.build.targets.wheel]
+packages = ["config"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["tests"]
+
+[tool.hatch.build]
+only-packages = true
 
 [project.urls]
 "Homepage" = "https://github.com/Neoteroi/essentials-configuration"
