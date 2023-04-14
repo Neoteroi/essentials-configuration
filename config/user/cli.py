@@ -8,13 +8,6 @@ from config.common import apply_key_value
 from config.common.cli import click
 from config.user import UserSettings
 
-try:
-    # Python 3.11
-    import tomllib
-except ImportError:  # pragma: no cover
-    # older Python
-    import tomli as tomllib  # noqa
-
 
 class ClickLogger:
     def info(self, message):
