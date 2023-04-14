@@ -303,11 +303,13 @@ Production apps should use dedicated services to handle secrets, like
 [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/), or similar services.
 For Azure Key Vault, an implementation is provided in [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault).
 
-## Handling user secrets
+## Handling user settings
 
-User secrets can be handled using the provided `config` CLI.
+User settings (stored in the user's folder) can be handled using the provided `config` CLI.
 
 ![Rich CLI](https://gist.githubusercontent.com/RobertoPrevato/38a0598b515a2f7257c614938843b99b/raw/a83facd6eb4ddc1dc8552a5f5f073278470010c2/config-settings-rich-cli.png)
+
+These settings can be useful to store secrets and other values during local development, or in general when working with desktop applications.
 
 ```
 config settings
@@ -330,7 +332,7 @@ Commands:
 ```
 
 The CLI by default uses [rich-click](https://github.com/ewels/rich-click), but
-`rich` can be disabled using the environment variable `POOR_CLI=1` or
+`rich` can be disabled using the environment variables `POOR_CLI=1` or
 `NO_RICH=1`.
 
 ### Overriding nested values
