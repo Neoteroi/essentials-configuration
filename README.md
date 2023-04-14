@@ -309,8 +309,6 @@ User settings (stored in the user's folder) can be handled using the provided `c
 
 ![Rich CLI](https://gist.githubusercontent.com/RobertoPrevato/38a0598b515a2f7257c614938843b99b/raw/a83facd6eb4ddc1dc8552a5f5f073278470010c2/config-settings-rich-cli.png)
 
-For information on how to use the CLI, refer to the instructions it provides, for example: `config settings set --help`.
-
 These settings can be useful to store secrets and other values during local development, or in general when working with desktop applications.
 
 ---
