@@ -1,5 +1,6 @@
 """
-This module provides support for user secrets stored locally, for development.
+This module provides support for user settings stored locally, for development, or for
+CLIs.
 """
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -30,16 +31,16 @@ def get_project_name() -> str:
     return uuid4().hex
 
 
-class UserSecrets(ConfigurationSource):
+class UserSettings(ConfigurationSource):
     """
-    Reads values stored in a file inside the user's folder.
+    This class reads settings stored in a file inside the user's folder.
     """
 
     def __init__(
         self, project_name: Optional[str] = None, optional: bool = True
     ) -> None:
         """
-        Configures an instance of UserSecrets that obtains values from a project file
+        Configures an instance of UserSettings that obtains values from a project file
         stored in the user's folder. If a project name is not provided, it is
         automatically inferred from a `pyproject.toml` file, if present, otherwise a
         random value is generated.
@@ -47,15 +48,17 @@ class UserSecrets(ConfigurationSource):
         if not project_name:
             project_name = get_project_name()
         self.project_name = project_name
-        self._secrets_file_path = self.get_base_folder() / project_name / "secrets.json"
-        self._source = JSONFile(self.secrets_file_path, optional)
+        self._settings_file_path = (
+            self.get_base_folder() / project_name / "settings.json"
+        )
+        self._source = JSONFile(self.settings_file_path, optional)
 
     def get_base_folder(self) -> Path:
         return Path.home() / ".neoteroi" / "ec"
 
     @property
-    def secrets_file_path(self) -> Path:
-        return self._secrets_file_path
+    def settings_file_path(self) -> Path:
+        return self._settings_file_path
 
     def get_values(self) -> Dict[str, Any]:
         """Returns the values read from this source."""
