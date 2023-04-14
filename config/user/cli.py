@@ -4,10 +4,9 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-import click
-
 from config.common import apply_key_value
-from config.secrets import UserSecrets
+from config.common.cli import click
+from config.user import UserSettings
 
 try:
     # Python 3.11
@@ -26,7 +25,7 @@ class ClickLogger:
             click.echo(message)
 
 
-class UserSecretsManager(UserSecrets):
+class UserSettingsManager(UserSettings):
     def __init__(
         self,
         project_name: Optional[str] = None,
@@ -34,16 +33,16 @@ class UserSecretsManager(UserSecrets):
         super().__init__(project_name, True)
         self.logger = ClickLogger()
 
-    def init_project_secrets(self):
+    def init_project_settings(self):
         name = self.project_name
-        secrets_path = self.secrets_file_path
+        settings_path = self.settings_file_path
 
-        if not secrets_path.exists():
-            secrets_path.parent.mkdir(parents=True, exist_ok=True)
-            secrets_path.write_text("{}")
+        if not settings_path.exists():
+            settings_path.parent.mkdir(parents=True, exist_ok=True)
+            settings_path.write_text("{}")
 
-        self.logger.info(f"Initialized project secrets for: {name}")
-        self.logger.debug(f"Secrets path: {secrets_path}")
+        self.logger.info(f"Initialized project settings for: {name}")
+        self.logger.debug(f"settings path: {settings_path}")
         pyproject = Path("pyproject.toml")
 
         if not pyproject.exists():
@@ -60,7 +59,7 @@ name = "{name}"
         try:
             self.write(values)
         except FileNotFoundError:
-            self.init_project_secrets()
+            self.init_project_settings()
             self.write(values)
 
     def set_secret(self, key: str, value: str):
@@ -73,20 +72,20 @@ name = "{name}"
         if key in values:
             self.logger.info(values[key])
 
-    def set_many_secrets(self, data):
+    def set_many_settings(self, data):
         values = self.get_values()
         values.update(data)
         self._write_values(values)
 
-    def show_secrets(self):
+    def show_settings(self):
         values = self.get_values()
         self.logger.info(
             json.dumps(values, indent=4, ensure_ascii=True, sort_keys=True)
         )
 
     def del_secret(self, key: str):
-        if not self.secrets_file_path.exists():
-            self.logger.info("There are no secrets configured.")
+        if not self.settings_file_path.exists():
+            self.logger.info("There are no settings configured.")
             return
         values = self.get_values()
         try:
@@ -97,11 +96,11 @@ name = "{name}"
             self.write(values)
 
     def write(self, values):
-        self.secrets_file_path.write_text(
+        self.settings_file_path.write_text(
             json.dumps(values, indent=4, ensure_ascii=False, sort_keys=True),
             encoding="utf8",
         )
-        self.logger.debug(f"Updated file: {self.secrets_file_path}")
+        self.logger.debug(f"Updated file: {self.settings_file_path}")
 
     def list_projects(self):
         try:
@@ -109,130 +108,130 @@ name = "{name}"
                 if child.is_dir():
                     self.logger.info(child.name)
         except FileNotFoundError:  # pragma: no cover
-            self.logger.info("There are no secrets configured.")
+            self.logger.info("There are no settings configured.")
 
     def show_info(self):
-        if self.secrets_file_path.exists():
-            self.logger.info(f"Secrets are stored at: {self.secrets_file_path}")
+        if self.settings_file_path.exists():
+            self.logger.info(f"settings are stored at: {self.settings_file_path}")
         else:
-            self.logger.info("There is no secrets file configured.")
+            self.logger.info("There is no settings file configured.")
 
 
 @click.group()
-def secrets():
+def settings():
     """
-    Commands to handle user secrets, for local development.
+    Commands to handle user settings, stored in the user's folder.
     """
 
 
 @click.command(name="init")
 @click.option("--project", "-p", required=False)
-def init_secrets(project: Optional[str]):
+def init_settings(project: Optional[str]):
     """
-    Initialize user secrets for the current folder.
+    Initialize user settings for the current folder.
     If a project name is specified, it is used, otherwise a value is obtained
     from a `pyproject.toml` file, or generated.
     """
-    UserSecretsManager(project).init_project_secrets()
+    UserSettingsManager(project).init_project_settings()
 
 
 @click.command(name="set")
 @click.argument("key")
 @click.argument("value")
 @click.option("--project", "-p", required=False)
-def set_secret(key: str, value: str, project: Optional[str]):
+def set_value(key: str, value: str, project: Optional[str]):
     """
-    Set a secret in a user file by key and value.
+    Set a setting in a user file by key and value.
     If a project name is specified, it is used, otherwise a value is obtained
     from a `pyproject.toml` file, or generated.
 
     Examples:
 
-    config secrets set "some" "example"
+    config settings set "some" "example"
 
-    config secrets set "some" "example" -p "foo"
+    config settings set "some" "example" -p "foo"
     """
-    UserSecretsManager(project).set_secret(key, value)
+    UserSettingsManager(project).set_secret(key, value)
 
 
 @click.command(name="get")
 @click.argument("key")
 @click.option("--project", "-p", required=False)
-def get_secret(key: str, project: Optional[str]):
+def get_value(key: str, project: Optional[str]):
     """
-    Get a secret in a user file by key.
+    Get a setting in a user file by key.
     If a project name is specified, it is used, otherwise a value is obtained
     from a `pyproject.toml` file, or generated.
 
     Examples:
 
-    config secrets get "key"
+    config settings get "key"
     """
-    UserSecretsManager(project).get_secret(key)
+    UserSettingsManager(project).get_secret(key)
 
 
 @click.command(name="set-many")
 @click.option("--file", help="Input file", type=click.File("r"), default=sys.stdin)
 @click.option("--project", "-p", required=False)
-def set_many_secrets(file, project: Optional[str]):
+def set_many_values(file, project: Optional[str]):
     """
-    Set many secrets read from a JSON file passed through stdin.
+    Set many settings, read from a JSON file passed through stdin.
     If a project name is specified, it is used, otherwise a value is obtained
     from a `pyproject.toml` file, or generated.
 
     Examples:
 
-    config secrets set-many --file example.json
+    config settings set-many --file example.json
 
-    config secrets set-many < example.json
+    config settings set-many < example.json
     """
     with file:
         data = json.loads(file.read())
 
-    UserSecretsManager(project).set_many_secrets(data)
+    UserSettingsManager(project).set_many_settings(data)
 
 
 @click.command(name="del")
 @click.argument("key")
 @click.option("--project", "-p", required=False)
-def del_secret(key: str, project: Optional[str]):
+def del_value(key: str, project: Optional[str]):
     """
-    Delete a secret for a project, by key.
+    Delete a setting for a project, by key.
     """
-    UserSecretsManager(project).del_secret(key)
+    UserSettingsManager(project).del_secret(key)
 
 
 @click.command(name="show")
 @click.option("--project", "-p", required=False)
-def show_secrets(project: Optional[str]):
+def show_settings(project: Optional[str]):
     """
-    Show the local secrets for a project.
+    Show the local settings for a project.
     """
-    UserSecretsManager(project).show_secrets()
+    UserSettingsManager(project).show_settings()
 
 
 @click.command(name="list")
 def list_groups():
     """
-    List all projects configured for secrets stored in the user folder.
+    List all projects configured for settings stored in the user folder.
     """
-    UserSecretsManager(None).list_projects()
+    UserSettingsManager(None).list_projects()
 
 
 @click.command(name="info")
 @click.option("--project", "-p", required=False)
 def show_info(project: Optional[str]):
     """
-    Show information about secrets for a project.
+    Show information about settings for a project.
     """
-    UserSecretsManager(project).show_info()
+    UserSettingsManager(project).show_info()
 
 
-secrets.add_command(init_secrets)
-secrets.add_command(get_secret)
-secrets.add_command(set_secret)
-secrets.add_command(set_many_secrets)
-secrets.add_command(del_secret)
-secrets.add_command(show_secrets)
-secrets.add_command(list_groups)
-secrets.add_command(show_info)
+settings.add_command(init_settings)
+settings.add_command(get_value)
+settings.add_command(set_value)
+settings.add_command(set_many_values)
+settings.add_command(del_value)
+settings.add_command(show_settings)
+settings.add_command(list_groups)
+settings.add_command(show_info)

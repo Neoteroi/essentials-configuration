@@ -1,8 +1,7 @@
 import os
 
-import click
-
-from config.secrets.cli import secrets
+from config.common.cli import click
+from config.user.cli import settings
 
 
 @click.group()
@@ -18,4 +17,4 @@ def main(verbose: bool):
         os.environ["EC_VERBOSE"] = "1"
 
 
-main.add_command(secrets)
+main.add_command(settings)

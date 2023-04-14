@@ -269,8 +269,8 @@ storing them into the user folder.
 The following example shows how secrets can be configured for a project:
 
 ```bash
-config secrets init
-config secrets set "Foo" "Some secret value"
+config settings init
+config settings set "Foo" "Some secret value"
 ```
 
 Secrets are organized by project, and the project information is obtained from
@@ -303,28 +303,38 @@ Production apps should use dedicated services to handle secrets, like
 [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/), or similar services.
 For Azure Key Vault, an implementation is provided in [essentials-configuration-keyvault](https://github.com/Neoteroi/essentials-configuration-keyvault).
 
-## Handling user secrets
+## Handling user settings
 
-User secrets can be handled using the provided `config` CLI.
+User settings (stored in the user's folder) can be handled using the provided `config` CLI.
+
+![Rich CLI](https://gist.githubusercontent.com/RobertoPrevato/38a0598b515a2f7257c614938843b99b/raw/a83facd6eb4ddc1dc8552a5f5f073278470010c2/config-settings-rich-cli.png)
+
+These settings can be useful to store secrets and other values during local development, or in general when working with desktop applications.
+
+---
+
+The CLI by default uses [rich-click](https://github.com/ewels/rich-click), but
+`rich` can be disabled using the environment variables `POOR_CLI=1` or
+`NO_RICH=1`.
 
 ```
-config secrets
-Usage: config secrets [OPTIONS] COMMAND [ARGS]...
+config settings
+Usage: config settings [OPTIONS] COMMAND [ARGS]...
 
-  Commands to handle user secrets, for local development.
+  Commands to handle user settings, stored in the user's folder.
 
 Options:
   --help  Show this message and exit.
 
 Commands:
-  del       Delete a secret for a project, by key.
-  get       Get a secret in a user file by key.
-  info      Show information about secrets for a project.
-  init      Initialize user secrets for the current folder.
-  list      List all projects configured for secrets stored in the user...
-  set       Set a secret in a user file by key and value.
-  set-many  Set many secrets read from a JSON file passed through stdin.
-  show      Show the local secrets for a project.
+  del       Delete a setting for a project, by key.
+  get       Get a setting in a user file by key.
+  info      Show information about settings for a project.
+  init      Initialize user settings for the current folder.
+  list      List all projects configured for settings stored in the user...
+  set       Set a setting in a user file by key and value.
+  set-many  Set many settings, read from a JSON file passed through stdin.
+  show      Show the local settings for a project.
 ```
 
 ### Overriding nested values
