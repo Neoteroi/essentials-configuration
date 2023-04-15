@@ -4,8 +4,9 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+import rich_click as click
+
 from config.common import apply_key_value
-from config.common.cli import click
 from config.user import UserSettings
 
 

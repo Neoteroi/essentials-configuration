@@ -1,6 +1,7 @@
 import os
 
-from config.common.cli import click
+import rich_click as click
+
 from config.user.cli import settings
 
 
