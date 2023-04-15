@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.3] - 2023-04-14 :crown:
 - Adopts `Rich`, through `rich-click` for the project CLI.
 - Renames the recently added `secrets` feature to `settings`.
+- Adds support for configuring nested objects using "." separator.
 
 ## [2.0.2] - 2023-04-10 :egg:
-- Fix missing `py.typed` files in the distribution package.
+- Fixes missing `py.typed` files in the distribution package.
 
 ## [2.0.0] - 2023-04-08 :egg:
 - Renames the main namespace to `config`.

@@ -8,8 +8,8 @@ T = TypeVar("T")
 
 
 def apply_key_value(obj, key, value):
-    key = key.strip("_:")  # remove special characters from both ends
-    for token in (":", "__"):
+    key = key.strip("_:.")  # remove special characters from both ends
+    for token in (":", "__", "."):
         if token in key:
             parts = key.split(token)
 

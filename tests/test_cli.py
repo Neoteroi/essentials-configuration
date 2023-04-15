@@ -75,6 +75,26 @@ def test_set_secret_show_settings():
     assert data == {"Foo": "FOO"}
 
 
+@pytest.mark.parametrize("sep", ["__", "."])
+def test_set_secret_nested_show_settings(sep):
+    test_id = uuid4().hex
+    runner = CliRunner()
+    result = runner.invoke(main, ["settings", "init", "-p", test_id])
+    assert result.exit_code == 0
+
+    result = runner.invoke(
+        main, ["settings", "set", f"source{sep}one", "foo", "-p", test_id]
+    )
+    result = runner.invoke(
+        main, ["settings", "set", f"source{sep}two", "ufo", "-p", test_id]
+    )
+
+    result = runner.invoke(main, ["settings", "show", "-p", test_id])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data == {"source": {"one": "foo", "two": "ufo"}}
+
+
 def test_set_secret_verbose():
     test_id = uuid4().hex
     runner = CliRunner()
