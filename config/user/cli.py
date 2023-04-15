@@ -55,17 +55,17 @@ name = "{name}"
             self.init_project_settings()
             self.write(values)
 
-    def set_secret(self, key: str, value: str):
+    def set_value(self, key: str, value: str):
         values = self.get_values()
         values = apply_key_value(values, key, value)
         self._write_values(values)
 
-    def get_secret(self, key: str):
+    def get_value(self, key: str):
         values = self.get_values()
         if key in values:
             self.logger.info(values[key])
 
-    def set_many_settings(self, data):
+    def set_many_values(self, data):
         values = self.get_values()
         values.update(data)
         self._write_values(values)
@@ -76,7 +76,7 @@ name = "{name}"
             json.dumps(values, indent=4, ensure_ascii=True, sort_keys=True)
         )
 
-    def del_secret(self, key: str):
+    def del_value(self, key: str):
         if not self.settings_file_path.exists():
             self.logger.info("There are no settings configured.")
             return
@@ -144,7 +144,7 @@ def set_value(key: str, value: str, project: Optional[str]):
 
     config settings set "some" "example" -p "foo"
     """
-    UserSettingsManager(project).set_secret(key, value)
+    UserSettingsManager(project).set_value(key, value)
 
 
 @click.command(name="get")
@@ -160,7 +160,7 @@ def get_value(key: str, project: Optional[str]):
 
     config settings get "key"
     """
-    UserSettingsManager(project).get_secret(key)
+    UserSettingsManager(project).get_value(key)
 
 
 @click.command(name="set-many")
@@ -181,7 +181,7 @@ def set_many_values(file, project: Optional[str]):
     with file:
         data = json.loads(file.read())
 
-    UserSettingsManager(project).set_many_settings(data)
+    UserSettingsManager(project).set_many_values(data)
 
 
 @click.command(name="del")
@@ -191,7 +191,7 @@ def del_value(key: str, project: Optional[str]):
     """
     Delete a setting for a project, by key.
     """
-    UserSettingsManager(project).del_secret(key)
+    UserSettingsManager(project).del_value(key)
 
 
 @click.command(name="show")

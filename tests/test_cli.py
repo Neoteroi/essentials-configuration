@@ -60,7 +60,7 @@ def test_show_info():
     assert result.output == "Initialized project settings for: %s\n" % test_id
 
 
-def test_set_secret_show_settings():
+def test_set_value_show_settings():
     test_id = uuid4().hex
     runner = CliRunner()
     result = runner.invoke(main, ["settings", "init", "-p", test_id])
@@ -76,7 +76,7 @@ def test_set_secret_show_settings():
 
 
 @pytest.mark.parametrize("sep", ["__", "."])
-def test_set_secret_nested_show_settings(sep):
+def test_set_value_nested_show_settings(sep):
     test_id = uuid4().hex
     runner = CliRunner()
     result = runner.invoke(main, ["settings", "init", "-p", test_id])
@@ -95,7 +95,7 @@ def test_set_secret_nested_show_settings(sep):
     assert data == {"source": {"one": "foo", "two": "ufo"}}
 
 
-def test_set_secret_verbose():
+def test_set_value_verbose():
     test_id = uuid4().hex
     runner = CliRunner()
     result = runner.invoke(main, ["settings", "init", "-p", test_id])
@@ -133,7 +133,7 @@ def test_settings_init_generate_pyproject():
         assert generated_pyproj.exists()
 
 
-def test_settings_set_secret_generate_pyproject():
+def test_settings_set_value_generate_pyproject():
     with temp_dir() as temp_dirname:
         runner = CliRunner()
         result = runner.invoke(main, ["settings", "set", "Foo", "FOO"])
@@ -142,7 +142,7 @@ def test_settings_set_secret_generate_pyproject():
         assert generated_pyproj.exists()
 
 
-def test_set_secret_show_settings_auto_project():
+def test_set_value_show_settings_auto_project():
     with temp_dir():
         runner = CliRunner()
         result = runner.invoke(main, ["settings", "init"])
@@ -157,7 +157,7 @@ def test_set_secret_show_settings_auto_project():
         assert data == {"Foo": "FOO"}
 
 
-def test_get_secret_auto_project():
+def test_get_value_auto_project():
     with temp_dir():
         runner = CliRunner()
         result = runner.invoke(main, ["settings", "init"])
@@ -171,7 +171,7 @@ def test_get_secret_auto_project():
         assert result.output == "Hello World\n"
 
 
-def test_set_secret_del_secret_auto_project():
+def test_set_value_del_value_auto_project():
     with temp_dir():
         runner = CliRunner()
         result = runner.invoke(main, ["settings", "init"])
@@ -190,7 +190,7 @@ def test_set_secret_del_secret_auto_project():
         assert data == {"SendGridAPIKey": "******"}
 
 
-def test_set_secret_del_not_existing_secret_auto_project():
+def test_set_value_del_not_existing_value_auto_project():
     with temp_dir():
         runner = CliRunner()
         result = runner.invoke(main, ["settings", "init"])
@@ -208,7 +208,7 @@ def test_set_secret_del_not_existing_secret_auto_project():
         assert data == {"Foo": "FOO"}
 
 
-def test_del_secret_no_settings_auto_project():
+def test_del_value_no_settings_auto_project():
     with temp_dir():
         runner = CliRunner()
         result = runner.invoke(main, ["settings", "del", "Foo"])
