@@ -311,32 +311,6 @@ User settings (stored in the user's folder) can be handled using the provided `c
 
 These settings can be useful to store secrets and other values during local development, or in general when working with desktop applications.
 
----
-
-The CLI by default uses [rich-click](https://github.com/ewels/rich-click), but
-`rich` can be disabled using the environment variables `POOR_CLI=1` or
-`NO_RICH=1`.
-
-```
-config settings
-Usage: config settings [OPTIONS] COMMAND [ARGS]...
-
-  Commands to handle user settings, stored in the user's folder.
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  del       Delete a setting for a project, by key.
-  get       Get a setting in a user file by key.
-  info      Show information about settings for a project.
-  init      Initialize user settings for the current folder.
-  list      List all projects configured for settings stored in the user...
-  set       Set a setting in a user file by key and value.
-  set-many  Set many settings, read from a JSON file passed through stdin.
-  show      Show the local settings for a project.
-```
-
 ### Overriding nested values
 
 It is possible to override nested values by environment variables or
