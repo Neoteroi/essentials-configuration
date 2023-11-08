@@ -2,12 +2,24 @@ from abc import ABC, abstractmethod
 from collections import abc
 from typing import Any, Dict, List, Mapping, Optional, Type, TypeVar
 
+from deepmerge import Merger
+
 from config.errors import ConfigurationOverrideError
 
 T = TypeVar("T")
 
+merger = Merger(
+    type_strategies=[
+        (list, ["append"]),
+        (dict, ["merge"]),
+        (set, ["union"]),
+    ],
+    fallback_strategies=["override"],
+    type_conflict_strategies=["override"],
+)
 
-def apply_key_value(obj, key, value):
+
+def apply_key_value(obj: Mapping[str, Any], key: str, value: Any) -> Mapping[str, Any]:
     key = key.strip("_:.")  # remove special characters from both ends
     for token in (":", "__", "."):
         if token in key:
@@ -52,7 +64,7 @@ def apply_key_value(obj, key, value):
                     )
 
                 try:
-                    sub_property[index] = value
+                    sub_property[index] = merger.merge(sub_property[index], value)
                 except IndexError:
                     raise ConfigurationOverrideError(
                         f"Invalid override for mutable sequence {key}; "
@@ -60,7 +72,13 @@ def apply_key_value(obj, key, value):
                     )
             else:
                 try:
-                    sub_property[last_part] = value
+                    if isinstance(sub_property, abc.Mapping):
+                        sub_property[last_part] = merger.merge(
+                            sub_property.get(last_part),
+                            value,
+                        )
+                    else:
+                        sub_property[last_part] = value
                 except TypeError as type_error:
                     raise ConfigurationOverrideError(
                         f"Invalid assignment {key} -> {value}; {str(type_error)}"
@@ -68,11 +86,11 @@ def apply_key_value(obj, key, value):
 
             return obj
 
-    obj[key] = value
+    obj[key] = merger.merge(obj.get(key), value)
     return obj
 
 
-def merge_values(destination, source):
+def merge_values(destination: Mapping[str, Any], source: Mapping[str, Any]) -> None:
     for key, value in source.items():
         apply_key_value(destination, key, value)
 

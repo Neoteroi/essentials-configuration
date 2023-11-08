@@ -1,5 +1,6 @@
 import os
 from typing import Any, Dict
+from uuid import uuid4
 
 import pkg_resources
 import pytest
@@ -343,11 +344,13 @@ def test_to_dictionary_method_after_applying_env():
     # in this test, environmental variables with TEST_ prefix are used
     # to override values from a previous source
 
-    os.environ["TEST_b__c__d"] = "200"
-    os.environ["TEST_a__0"] = "3"
+    prefix = str(uuid4())
+
+    os.environ[f"{prefix}_b__c__d"] = "200"
+    os.environ[f"{prefix}_a__0"] = "3"
     builder = ConfigurationBuilder(
         MapSource({"a": [1, 2, 3], "b": {"c": {"d": 100}}}),
-        EnvVars("TEST_"),
+        EnvVars(f"{prefix}_"),
     )
 
     config = builder.build()
@@ -367,4 +370,17 @@ def test_overriding_sub_properties():
 
     assert config.a.b.c == 200
     assert config.a.b2 == "foo"
+    assert config.a2 == "oof"
+
+
+def test_deep_merges_of_mappings():
+    builder = ConfigurationBuilder(
+        MapSource({"a": {"b": {"c": 100}}, "a2": "oof"}),
+        MapSource({"a": {"b": {"d": 200}}}),
+    )
+
+    config = builder.build()
+
+    assert config.a.b.c == 100
+    assert config.a.b.d == 200
     assert config.a2 == "oof"
