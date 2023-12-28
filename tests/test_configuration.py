@@ -2,7 +2,6 @@ import os
 from typing import Any, Dict
 from uuid import uuid4
 
-import pkg_resources
 import pytest
 
 from config.common import (
@@ -18,14 +17,23 @@ from config.json import JSONFile
 from config.toml import TOMLFile
 from config.yaml import YAMLFile
 
+try:
+    from importlib.resources import files
+
+    def _get_file_path(file_name: str) -> str:
+        return str(files("tests") / file_name)
+
+except ImportError:
+    # Python 3.8
+    import pkg_resources
+
+    def _get_file_path(file_name: str) -> str:
+        return pkg_resources.resource_filename(__name__, f"./{file_name}")
+
 
 class FooSource(ConfigurationSource):
     def get_values(self) -> Dict[str, Any]:
         return {}
-
-
-def _get_file_path(file_name: str) -> str:
-    return pkg_resources.resource_filename(__name__, f"./{file_name}")
 
 
 def test_builder():
