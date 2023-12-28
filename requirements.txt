@@ -27,7 +27,7 @@ pyproject_hooks==1.0.0
 pytest==7.2.0
 pytest-cov==4.0.0
 python-dotenv==1.0.0
-PyYAML==6.0
+PyYAML
 regex==2022.10.31
 rich==13.3.4
 rich-click==1.6.1
