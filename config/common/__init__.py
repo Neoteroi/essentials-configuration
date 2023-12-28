@@ -49,7 +49,7 @@ def apply_key_value(obj: Mapping[str, Any], key: str, value: Any) -> Mapping[str
                         sub_property, abc.MutableSequence
                     ):
                         raise ConfigurationOverrideError(
-                            f"The key `{key}` cannot be used "
+                            f"The key '{key}' cannot be used "
                             f"because it overrides another "
                             f"variable with shorter key! ({part}, {sub_property})"
                         )
@@ -67,7 +67,7 @@ def apply_key_value(obj: Mapping[str, Any], key: str, value: Any) -> Mapping[str
                     sub_property[index] = merger.merge(sub_property[index], value)
                 except IndexError:
                     raise ConfigurationOverrideError(
-                        f"Invalid override for mutable sequence {key}; "
+                        f"Invalid override for mutable sequence {key}, "
                         f"assignment index out of range"
                     )
             else:
@@ -81,7 +81,7 @@ def apply_key_value(obj: Mapping[str, Any], key: str, value: Any) -> Mapping[str
                         sub_property[last_part] = value
                 except TypeError as type_error:
                     raise ConfigurationOverrideError(
-                        f"Invalid assignment {key} -> {value}; {str(type_error)}"
+                        f"Invalid assignment {key} -> {value}, {str(type_error)}"
                     )
 
             return obj

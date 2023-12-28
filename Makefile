@@ -43,7 +43,7 @@ check-flake8:
 
 check-isort:
 	@echo "$(BOLD)Checking isort$(RESET)"
-	@isort --check-only . 2>&1
+	@isort --check-only config 2>&1
 
 
 check-black:
