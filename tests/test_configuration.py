@@ -17,7 +17,6 @@ from config.json import JSONFile
 from config.toml import TOMLFile
 from config.yaml import YAMLFile
 
-
 try:
     from importlib.resources import files
 
