@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict
+from typing import Any
 from uuid import uuid4
 
 import pytest
@@ -32,7 +32,7 @@ except ImportError:
 
 
 class FooSource(ConfigurationSource):
-    def get_values(self) -> Dict[str, Any]:
+    def get_values(self) -> dict[str, Any]:
         return {}
 
 

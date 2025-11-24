@@ -2,6 +2,7 @@
 This example shows how to override nested properties using environment
 variables.
 """
+
 import os
 
 from config.common import ConfigurationBuilder, MapSource

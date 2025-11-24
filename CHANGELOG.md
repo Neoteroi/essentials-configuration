@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2025-11-24
+
+- Upgrade Python versions in workflow.
+- Remove support for Python <= 3.10.
+- Remove Codecov from README and workflow.
+- Upgrade type annotations.
+
 ## [2.0.4] - 2023-12-28 :snowman_with_snow:
+
 - Improves the library to deep-merge dictionaries of values instead of replacing
   objects entirely (fix [#10](https://github.com/Neoteroi/essentials-configuration/issues/10)), by @StummeJ.
 - Adds Python 3.12 to the build matrix, upgrades dev dependencies and fix tests

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 from config.common.files import FileConfigurationSource, PathType
 
@@ -20,6 +20,6 @@ class TOMLFile(FileConfigurationSource):
         super().__init__(file_path, optional)
         self.parse_float = parse_float
 
-    def read_source(self) -> Dict[str, Any]:
+    def read_source(self) -> dict[str, Any]:
         with open(self.file_path, "rb") as source:
             return tomllib.load(source, parse_float=self.parse_float)

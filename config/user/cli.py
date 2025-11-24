@@ -2,7 +2,6 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 
 import rich_click as click
 
@@ -22,7 +21,7 @@ class ClickLogger:
 class UserSettingsManager(UserSettings):
     def __init__(
         self,
-        project_name: Optional[str] = None,
+        project_name: str | None = None,
     ) -> None:
         super().__init__(project_name, True)
         self.logger = ClickLogger()
@@ -120,7 +119,7 @@ def settings():
 
 @click.command(name="init")
 @click.option("--project", "-p", required=False)
-def init_settings(project: Optional[str]):
+def init_settings(project: str | None):
     """
     Initialize user settings for the current folder.
     If a project name is specified, it is used, otherwise a value is obtained
@@ -133,7 +132,7 @@ def init_settings(project: Optional[str]):
 @click.argument("key")
 @click.argument("value")
 @click.option("--project", "-p", required=False)
-def set_value(key: str, value: str, project: Optional[str]):
+def set_value(key: str, value: str, project: str | None):
     """
     Set a setting in a user file by key and value.
     If a project name is specified, it is used, otherwise a value is obtained
@@ -151,7 +150,7 @@ def set_value(key: str, value: str, project: Optional[str]):
 @click.command(name="get")
 @click.argument("key")
 @click.option("--project", "-p", required=False)
-def get_value(key: str, project: Optional[str]):
+def get_value(key: str, project: str | None):
     """
     Get a setting in a user file by key.
     If a project name is specified, it is used, otherwise a value is obtained
@@ -167,7 +166,7 @@ def get_value(key: str, project: Optional[str]):
 @click.command(name="set-many")
 @click.option("--file", help="Input file", type=click.File("r"), default=sys.stdin)
 @click.option("--project", "-p", required=False)
-def set_many_values(file, project: Optional[str]):
+def set_many_values(file, project: str | None):
     """
     Set many settings, read from a JSON file passed through stdin.
     If a project name is specified, it is used, otherwise a value is obtained
@@ -188,7 +187,7 @@ def set_many_values(file, project: Optional[str]):
 @click.command(name="del")
 @click.argument("key")
 @click.option("--project", "-p", required=False)
-def del_value(key: str, project: Optional[str]):
+def del_value(key: str, project: str | None):
     """
     Delete a setting for a project, by key.
     """
@@ -197,7 +196,7 @@ def del_value(key: str, project: Optional[str]):
 
 @click.command(name="show")
 @click.option("--project", "-p", required=False)
-def show_settings(project: Optional[str]):
+def show_settings(project: str | None):
     """
     Show the local settings for a project.
     """
@@ -214,7 +213,7 @@ def list_groups():
 
 @click.command(name="info")
 @click.option("--project", "-p", required=False)
-def show_info(project: Optional[str]):
+def show_info(project: str | None):
     """
     Show information about settings for a project.
     """

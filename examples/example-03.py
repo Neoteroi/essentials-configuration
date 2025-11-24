@@ -3,6 +3,7 @@ This example shows how to load app settings from a JSON file, and from
 environment variables, filtered by "APP_" prefix and obtained from a .env file
 (this is optional!), and how values can be overridden.
 """
+
 from config.common import ConfigurationBuilder
 from config.env import EnvVars
 from config.json import JSONFile

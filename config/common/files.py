@@ -1,11 +1,11 @@
 from abc import abstractmethod
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any
 
 from config.common import ConfigurationSource
 from config.errors import MissingConfigurationFileError
 
-PathType = Union[Path, str]
+PathType = Path | str
 
 
 class FileConfigurationSource(ConfigurationSource):
@@ -15,13 +15,13 @@ class FileConfigurationSource(ConfigurationSource):
         self.optional = optional
 
     @abstractmethod
-    def read_source(self) -> Dict[str, Any]:
+    def read_source(self) -> dict[str, Any]:
         """
         Reads values from the source file path. This method is not
         used if the file does not exist.
         """
 
-    def get_values(self) -> Dict[str, Any]:
+    def get_values(self) -> dict[str, Any]:
         if not self.file_path.exists():
             if self.optional:
                 return {}

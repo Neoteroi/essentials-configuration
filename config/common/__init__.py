@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import abc
-from typing import Any, Dict, List, Mapping, Optional, Type, TypeVar
+from typing import Any, Mapping, Type, TypeVar
 
 from deepmerge import Merger
 
@@ -97,7 +97,7 @@ def merge_values(destination: Mapping[str, Any], source: Mapping[str, Any]) -> N
 
 class ConfigurationSource(ABC):
     @abstractmethod
-    def get_values(self) -> Dict[str, Any]:
+    def get_values(self) -> dict[str, Any]:
         """Returns the values read from this source."""
 
     def __repr__(self) -> str:
@@ -112,7 +112,7 @@ class MapSource(ConfigurationSource):
         super().__init__()
         self._values = dict(values.items())
 
-    def get_values(self) -> Dict[str, Any]:
+    def get_values(self) -> dict[str, Any]:
         return self._values
 
 
@@ -136,11 +136,11 @@ class Configuration:
             return [cls(item) for item in arg]
         return arg
 
-    def __init__(self, mapping: Optional[Mapping[str, Any]] = None):
+    def __init__(self, mapping: Mapping[str, Any] | None = None):
         """
         Creates a new instance of Configuration object with the given values.
         """
-        self._data: Dict[str, Any] = dict(mapping.items()) if mapping else {}
+        self._data: dict[str, Any] = dict(mapping.items()) if mapping else {}
 
     def __contains__(self, item: str) -> bool:
         return item in self._data
@@ -166,7 +166,7 @@ class Configuration:
         return f"<Configuration {repr(hidden_values)}>"
 
     @property
-    def values(self) -> Dict[str, Any]:
+    def values(self) -> dict[str, Any]:
         """
         Returns a copy of the dictionary of current settings.
         """
@@ -190,13 +190,13 @@ class ConfigurationBuilder:
         object from different sources. Sources are applied in the given order and can
         override each other's settings.
         """
-        self._sources: List[ConfigurationSource] = list(sources) if sources else []
+        self._sources: list[ConfigurationSource] = list(sources) if sources else []
 
     def __repr__(self) -> str:
         return f"<ConfigurationBuilder {self._sources}>"
 
     @property
-    def sources(self) -> List[ConfigurationSource]:
+    def sources(self) -> list[ConfigurationSource]:
         return self._sources
 
     def add_source(self, source: ConfigurationSource):

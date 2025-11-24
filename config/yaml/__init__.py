@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 import yaml
 
@@ -12,7 +12,7 @@ class YAMLFile(FileConfigurationSource):
         super().__init__(file_path, optional)
         self.safe_load = safe_load
 
-    def read_source(self) -> Dict[str, Any]:
+    def read_source(self) -> dict[str, Any]:
         with open(self.file_path, "rt", encoding="utf-8") as source:
             if self.safe_load:
                 return yaml.safe_load(source)
