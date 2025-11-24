@@ -2,8 +2,9 @@
 This module provides support for user settings stored locally, for development, or for
 CLIs.
 """
+
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 from uuid import uuid4
 
 from config.common import ConfigurationSource
@@ -37,7 +38,7 @@ class UserSettings(ConfigurationSource):
     """
 
     def __init__(
-        self, project_name: Optional[str] = None, optional: bool = True
+        self, project_name: str | None = None, optional: bool = True
     ) -> None:
         """
         Configures an instance of UserSettings that obtains values from a project file
@@ -60,6 +61,6 @@ class UserSettings(ConfigurationSource):
     def settings_file_path(self) -> Path:
         return self._settings_file_path
 
-    def get_values(self) -> Dict[str, Any]:
+    def get_values(self) -> dict[str, Any]:
         """Returns the values read from this source."""
         return self._source.get_values()

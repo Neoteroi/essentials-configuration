@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade Python versions in workflow.
 - Remove support for Python <= 3.10.
 - Remove Codecov from README and workflow.
+- Upgrade type annotations.
 
 ## [2.0.4] - 2023-12-28 :snowman_with_snow:
 
