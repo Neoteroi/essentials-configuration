@@ -2,7 +2,6 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 
 import rich_click as click
 
