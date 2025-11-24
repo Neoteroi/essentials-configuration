@@ -2,6 +2,7 @@
 This example illustrates a way to override settings from a common file, using an
 environment specific settings file.
 """
+
 import os
 from dataclasses import dataclass
 
