@@ -37,9 +37,7 @@ class UserSettings(ConfigurationSource):
     This class reads settings stored in a file inside the user's folder.
     """
 
-    def __init__(
-        self, project_name: str | None = None, optional: bool = True
-    ) -> None:
+    def __init__(self, project_name: str | None = None, optional: bool = True) -> None:
         """
         Configures an instance of UserSettings that obtains values from a project file
         stored in the user's folder. If a project name is not provided, it is
