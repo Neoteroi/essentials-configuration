@@ -1,13 +1,14 @@
 ![Build](https://github.com/Neoteroi/essentials-configuration/workflows/Build/badge.svg)
 [![pypi](https://img.shields.io/pypi/v/essentials-configuration.svg)](https://pypi.python.org/pypi/essentials-configuration)
 [![versions](https://img.shields.io/pypi/pyversions/essentials-configuration.svg)](https://github.com/Neoteroi/essentials-configuration)
-[![codecov](https://codecov.io/gh/Neoteroi/essentials-configuration/branch/main/graph/badge.svg?token=VzAnusWIZt)](https://codecov.io/gh/Neoteroi/essentials-configuration)
 [![license](https://img.shields.io/github/license/Neoteroi/essentials-configuration.svg)](https://github.com/Neoteroi/essentials-configuration/blob/main/LICENSE)
 
 # Python configuration utilities
+
 Implementation of key-value pair based configuration for Python applications.
 
 **Features:**
+
 - support for most common sources of application settings
 - support for overriding settings in sequence
 - support for nested structures and lists, using attribute notation
@@ -31,6 +32,7 @@ enabling different scenarios like configuration by environment and system
 instance.
 
 ## Supported sources:
+
 - **toml** files
 - **yaml** files
 - **json** files
